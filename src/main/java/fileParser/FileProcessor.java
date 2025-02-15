@@ -1,47 +1,54 @@
 package fileParser;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class FileProcessor {
 
-    private List<String> stringsLst = new ArrayList<>();
-    private List<Integer> integersLst = new ArrayList<>();
-    private List<Double> doublesLst = new ArrayList<>();
+    private DataHolder dataHolder;
 
-    public void fileProcessing(String filePath) throws IOException{
-        File file = new File(filePath);
-        String line;
-        try(Scanner sc = new Scanner(file)) {
-            while (sc.hasNextLine()){
-                line = sc.nextLine().trim();
-                if(line.isEmpty()) return;
-                try{
-                    integersLst.add(Integer.parseInt(line));
-                }catch (RuntimeException ex){
-                    try{
-                        doublesLst.add(Double.parseDouble(line));
-                    }catch (RuntimeException exc){
-                        stringsLst.add(line);
+    public FileProcessor(DataHolder dataHolder) {
+        this.dataHolder = dataHolder;
+    }
+
+    public void fileProcessingNEW(List<String> filePathsLst) throws IOException {
+        List<BufferedReader> readersLst = new ArrayList<>();
+        for (String oneFilePath : filePathsLst) {
+            try {
+                readersLst.add(new BufferedReader(new FileReader(oneFilePath)));
+            } catch (IOException ee) {
+                System.out.println("Чтение файла: " + oneFilePath + " не удалось");
+            }
+        }
+        int notCompleted = readersLst.size();
+        while (notCompleted != 0) {
+            notCompleted = readersLst.size();
+            for (BufferedReader reader : readersLst) {
+                String line = reader.readLine();
+                if (line == null) {
+                    notCompleted--;
+                    if (notCompleted == 0) break; //если все файлы подошли к концу
+                    continue;
+                }
+                if (line.isEmpty()) continue;
+
+                try {
+                    dataHolder.setOneInteger(Integer.parseInt(line));
+                } catch (Exception e) {
+                    try {
+                        dataHolder.setOneDouble(Double.parseDouble(line));
+                    } catch (Exception ex) {
+                        try {
+                            dataHolder.setOneString(line);
+                        } catch (Exception exc) {
+                            throw new IOException();
+                        }
                     }
                 }
             }
         }
-
-    }
-
-    public List<String> getStringsLst() {
-        return stringsLst;
-    }
-
-    public List<Integer> getIntegersLst() {
-        return integersLst;
-    }
-
-    public List<Double> getDoublesLst() {
-        return doublesLst;
     }
 }
