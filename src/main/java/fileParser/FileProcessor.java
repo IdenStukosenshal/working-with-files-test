@@ -1,5 +1,7 @@
 package fileParser;
 
+import fileParser.dto.DataHolder;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,7 +29,7 @@ public class FileProcessor implements Runnable{
             fileProcessing();
         }catch (IOException eee){
             System.out.println("Ошибка при чтении файла");
-        }finally { //TODO Посмотреть внимательнее где именно разместить это
+        }finally { //TODO Посмотреть внимательнее где именно разместить это и какие исключения ловить
             isFinished.set(true);
         }
 
@@ -42,18 +44,16 @@ public class FileProcessor implements Runnable{
                 System.out.println("Чтение файла: " + oneFilePath + " не удалось. Данные из этого файла не будут прочитаны");
             }
         }
-        int notCompleted = readersLst.size();
-        while (notCompleted != 0) {
-            notCompleted = readersLst.size();
-            for (BufferedReader reader : readersLst) {
+        while (!readersLst.isEmpty()) {
+            for (int i = 0; i < readersLst.size(); i++){
+                var reader = readersLst.get(i);
                 String line = reader.readLine();
                 if (line == null) {
-                    notCompleted--;
-                    if (notCompleted == 0) break;
+                    reader.close();
+                    readersLst.remove(reader);
                     continue;
                 }
                 if (line.isEmpty()) continue;
-
                 try {
                     dataHolder.setOneInteger(Integer.parseInt(line));
                 } catch (Exception e) { //TODO разобраться с исключениями

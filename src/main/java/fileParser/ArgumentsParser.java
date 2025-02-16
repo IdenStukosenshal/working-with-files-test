@@ -10,7 +10,7 @@ public class ArgumentsParser {
         return new SessionParametres(
                 StatisticsType.NONE,
                 "префикс-файла-",
-                "/папка/папка2",
+                "/папка1/папка2",
                 true,
                 List.of(
                         "src/main/java/fileParser/file1.txt",

@@ -1,12 +1,13 @@
 package fileParser.writers;
 
-import fileParser.DataHolder;
+import fileParser.dto.DataHolder;
 import fileParser.SessionParametres;
-import fileParser.StatisticsType;
+import fileParser.dto.StringStatisticsHolder;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class StringWriter implements Runnable {
+public class StringWriter implements Callable<StringStatisticsHolder> {
     private final DataHolder dataHolder;
     private final SessionParametres sessionParametres;
     private final AtomicBoolean isFinished;
@@ -19,9 +20,10 @@ public class StringWriter implements Runnable {
         this.isFinished = isFinished;
     }
 
+
     @Override
-    public void run() {
-        while (true){
+    public StringStatisticsHolder call() throws Exception {
+        while (true){//TODO доделать
             String x = dataHolder.getOneString();
             if(x != null){
                 System.out.println("String thread: " + x);
@@ -29,5 +31,7 @@ public class StringWriter implements Runnable {
                 break;
             }
         }
+        //TODO доделать
+        return new StringStatisticsHolder(null, null, null);
     }
 }
