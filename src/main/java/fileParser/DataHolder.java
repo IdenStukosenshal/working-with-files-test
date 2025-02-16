@@ -5,9 +5,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class DataHolder {
 
-    private BlockingQueue<String> stringsQ = new LinkedBlockingQueue<>();
-    private BlockingQueue<Integer> integersQ = new LinkedBlockingQueue<>();
-    private BlockingQueue<Double> doublesQ = new LinkedBlockingQueue<>();
+    private final BlockingQueue<String> stringsQ = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Integer> integersQ = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Double> doublesQ = new LinkedBlockingQueue<>();
 
     public String getOneString() {
         return stringsQ.poll();
@@ -31,5 +31,17 @@ public class DataHolder {
 
     public void setOneDouble(Double oneDouble) throws InterruptedException{
         doublesQ.put(oneDouble);
+    }
+
+    public BlockingQueue<String> getStringsQueue() {
+        return stringsQ;
+    }
+
+    public BlockingQueue<Integer> getIntegersQueue() {
+        return integersQ;
+    }
+
+    public BlockingQueue<Double> getDoublesQueue() {
+        return doublesQ;
     }
 }
