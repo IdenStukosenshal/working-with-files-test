@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class FileProcessor implements Runnable{
+public class FileProcessor implements Runnable {
 
     private final DataHolder dataHolder;
     private final List<String> filePathsLst;
@@ -25,11 +25,11 @@ public class FileProcessor implements Runnable{
 
     @Override
     public void run() {
-        try{
+        try {
             fileProcessing();
-        }catch (IOException eee){
-            System.out.println("Ошибка при чтении файла");
-        }finally { //TODO Посмотреть внимательнее где именно разместить это и какие исключения ловить
+        } catch (IOException eee) {
+            System.out.println("Ошибка во время чтения файла");
+        } finally { //TODO Возможно сделать так, чтобы проблемный файл пропускался вместо завершения чтения?
             isFinished.set(true);
         }
 
@@ -45,7 +45,7 @@ public class FileProcessor implements Runnable{
             }
         }
         while (!readersLst.isEmpty()) {
-            for (int i = 0; i < readersLst.size(); i++){
+            for (int i = 0; i < readersLst.size(); i++) {
                 var reader = readersLst.get(i);
                 String line = reader.readLine();
                 if (line == null) {
@@ -56,19 +56,15 @@ public class FileProcessor implements Runnable{
                 if (line.isEmpty()) continue;
                 try {
                     dataHolder.setOneInteger(Integer.parseInt(line));
-                } catch (Exception e) { //TODO разобраться с исключениями
+                } catch (NumberFormatException e) {
                     try {
                         dataHolder.setOneDouble(Double.parseDouble(line));
-                    } catch (Exception ex) {
-                        try {
-                            dataHolder.setOneString(line);
-                        } catch (Exception exc) {
-                            throw new RuntimeException();
-                        }
+                    } catch (NumberFormatException ex) {
+                        dataHolder.setOneString(line);
                     }
                 }
             }
+            isFinished.set(true);
         }
-        isFinished.set(true);
     }
 }
