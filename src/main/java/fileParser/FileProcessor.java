@@ -1,6 +1,7 @@
 package fileParser;
 
-import fileParser.dto.DataHolder;
+import fileParser.dataStorage.DataHolder;
+import fileParser.dataStorage.StatisticsHolder;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,15 +13,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class FileProcessor implements Runnable {
 
     private final DataHolder dataHolder;
+    private final StatisticsHolder statisticsHolder;
     private final List<String> filePathsLst;
     private final AtomicBoolean isFinished;
 
     public FileProcessor(List<String> filePathsLst,
                          DataHolder dataHolder,
+                         StatisticsHolder statisticsHolder,
                          AtomicBoolean isFinished) {
         this.dataHolder = dataHolder;
         this.filePathsLst = filePathsLst;
         this.isFinished = isFinished;
+        this.statisticsHolder = statisticsHolder;
     }
 
     @Override
@@ -32,10 +36,12 @@ public class FileProcessor implements Runnable {
         } finally { //TODO Возможно сделать так, чтобы проблемный файл пропускался вместо завершения чтения?
             isFinished.set(true);
         }
-
     }
 
     public void fileProcessing() throws IOException {
+        Integer integerValue;
+        Double doubleValue;
+
         List<BufferedReader> readersLst = new ArrayList<>();
         for (String oneFilePath : filePathsLst) {
             try {
@@ -55,12 +61,17 @@ public class FileProcessor implements Runnable {
                 }
                 if (line.isEmpty()) continue;
                 try {
-                    dataHolder.setOneInteger(Integer.parseInt(line));
+                    integerValue = Integer.parseInt(line);
+                    dataHolder.setOneInteger(integerValue);
+                    statisticsHolder.setIntegerStatistics(integerValue);
                 } catch (NumberFormatException e) {
                     try {
-                        dataHolder.setOneDouble(Double.parseDouble(line));
+                        doubleValue = Double.parseDouble(line);
+                        dataHolder.setOneDouble(doubleValue);
+                        statisticsHolder.setDoubleStatistics(doubleValue);
                     } catch (NumberFormatException ex) {
                         dataHolder.setOneString(line);
+                        statisticsHolder.setStringStatistics(line);
                     }
                 }
             }

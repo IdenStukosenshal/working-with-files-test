@@ -1,13 +1,11 @@
 package fileParser.writers;
 
-import fileParser.dto.DataHolder;
-import fileParser.SessionParametres;
-import fileParser.dto.IntegerStatisticsHolder;
+import fileParser.dataStorage.DataHolder;
+import fileParser.dto.SessionParametres;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class IntegerWriter implements Callable<IntegerStatisticsHolder> {
+public class IntegerWriter implements Runnable {
 
     private final DataHolder dataHolder;
     private final SessionParametres sessionParametres;
@@ -21,17 +19,16 @@ public class IntegerWriter implements Callable<IntegerStatisticsHolder> {
         this.isFinished = isFinished;
     }
 
-
     @Override
-    public IntegerStatisticsHolder call() throws Exception {
-        while (true){ //TODO доделать
+    public void run() {
+
+        while (true) { //TODO доделать
             Integer x = dataHolder.getOneInteger();
-            if(x != null){
+            if (x != null) {
                 System.out.println("Integer thread: " + x);
-            } else if(isFinished.get() && dataHolder.getIntegersQueue().isEmpty()){
+            } else if (isFinished.get() && dataHolder.getIntegersQueue().isEmpty()) {
                 break;
             }
-        }//TODO доделать
-        return new IntegerStatisticsHolder(null, null, null, null, null);
+        }
     }
 }

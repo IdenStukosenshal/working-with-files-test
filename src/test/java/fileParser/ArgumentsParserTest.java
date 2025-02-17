@@ -5,13 +5,18 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileProcessorTest {
+class ArgumentsParserTest {
 
-    @BeforeEach
-    void setUp() {
+    @Test
+    void parse() {
     }
 
     @Test
-    void fileProcessing() {
+    void parse() {
     }
+
+    @Test
+    void parse() {
+    }
+
 }

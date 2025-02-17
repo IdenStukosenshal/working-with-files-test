@@ -1,80 +1,89 @@
 package fileParser;
 
-import fileParser.dto.DataHolder;
-import fileParser.dto.DoubleStatisticsHolder;
-import fileParser.dto.IntegerStatisticsHolder;
-import fileParser.dto.StringStatisticsHolder;
+import fileParser.dataStorage.DataHolder;
+import fileParser.dataStorage.StatisticsHolder;
+import fileParser.dto.*;
 import fileParser.writers.DoubleWriter;
 import fileParser.writers.IntegerWriter;
 import fileParser.writers.StringWriter;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
+import java.io.FileNotFoundException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
 
     public static void main(String[] args) {
+
+        String[] argsTEST = new String[9];
+        argsTEST[0] = "-o";
+        argsTEST[1] = "";//"/папка1/папка2";
+        argsTEST[2] = "-p";
+        argsTEST[3] = "-prefix-";
+        argsTEST[4] = "-f";
+        argsTEST[5] = "-a";
+        argsTEST[6] = "src/main/java/fileParser/file1.txt";
+        argsTEST[7] = "src/main/java/fileParser/file2.txt";
+        argsTEST[8] = "src/main/java/fileParser/file3.txt";
+
         ArgumentsParser argumentsParser = new ArgumentsParser();
         DataHolder dataHolder = new DataHolder();
         AtomicBoolean isFinished = new AtomicBoolean(false);
+        SessionParametres sessionParametres;
 
-        //Здесь должны быть проверки
-        SessionParametres sessionParametres = argumentsParser.parse(args);
-        //
+        try {//TODO не забыть заменить + проверки
+            sessionParametres = argumentsParser.parse(argsTEST);
+        } catch (FileNotFoundException exc) {
+            System.out.println("Пути файлов не были указаны");
+            return;
+        }
+        StatisticsHolder statisticsHolder = new StatisticsHolder(sessionParametres);
 
-        //https://www.geeksforgeeks.org/callable-future-java/
+        System.out.println(sessionParametres.getMessage());
+
         FileProcessor fileProcessor = new FileProcessor(
                 sessionParametres.filesPathsLst(),
                 dataHolder,
+                statisticsHolder,
                 isFinished);
 
-        Callable<IntegerStatisticsHolder> integerWriterCallable = new IntegerWriter(
+        Runnable integerWriterRunnable = new IntegerWriter(
                 dataHolder,
                 sessionParametres,
                 isFinished);
-        Callable<DoubleStatisticsHolder> doubleWriterCallable = new DoubleWriter(
+        Runnable  doubleWriterRunnable = new DoubleWriter(
                 dataHolder,
                 sessionParametres,
                 isFinished);
-        Callable<StringStatisticsHolder> stringWriterCallable = new StringWriter(
+        Runnable  stringWriterRunnable = new StringWriter(
                 dataHolder,
                 sessionParametres,
                 isFinished);
 
         Thread readThread = new Thread(fileProcessor);
-
-        FutureTask<IntegerStatisticsHolder> futureInteger = new FutureTask<>(integerWriterCallable);
-        Thread writeIntegerThread = new Thread(futureInteger);
-        FutureTask<DoubleStatisticsHolder> futureDouble = new FutureTask<>(doubleWriterCallable);
-        Thread writeDoubleThread = new Thread(futureDouble);
-        FutureTask<StringStatisticsHolder> futureString = new FutureTask<>(stringWriterCallable);
-        Thread writeStringThread = new Thread(futureString);
+        Thread writeIntegerThread = new Thread(integerWriterRunnable);
+        Thread writeDoubleThread = new Thread(doubleWriterRunnable);
+        Thread writeStringThread = new Thread(stringWriterRunnable);
 
         readThread.start();
-
         writeIntegerThread.start();
         writeDoubleThread.start();
         writeStringThread.start();
 
-        try{
+        try {
             readThread.join();
-
             writeIntegerThread.join();
-            System.out.println(futureInteger.get());
-
             writeDoubleThread.join();
-            System.out.println(futureDouble.get());
-
             writeStringThread.join();
-            System.out.println(futureString.get());
-
-        }catch (InterruptedException | ExecutionException eee){ //TODO Временно????
+        } catch (InterruptedException eee) {
             System.out.println("Прерывание работы программы по неизвестным причинам");
         }
 
+        if(sessionParametres.statisticsType() != StatisticsType.NONE){
+            System.out.println(statisticsHolder.getIntegerStatistics() + "\n" +
+                    statisticsHolder.getDoubleStatistics() + "\n" +
+                    statisticsHolder.getStringStatistics());
+        }
 
-
+        System.out.println("Работа выполнена успешно 😎");
     }
 }

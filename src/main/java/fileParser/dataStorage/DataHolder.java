@@ -1,4 +1,4 @@
-package fileParser.dto;
+package fileParser.dataStorage;
 
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
