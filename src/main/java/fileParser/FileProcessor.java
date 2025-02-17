@@ -64,7 +64,7 @@ public class FileProcessor implements Runnable {
                     }
                 }
             }
-            isFinished.set(true);
         }
+        isFinished.set(true);
     }
 }
