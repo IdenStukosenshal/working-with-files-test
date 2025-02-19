@@ -32,8 +32,8 @@ public class FileProcessor implements Runnable {
         try {
             fileProcessing();
         } catch (IOException eee) {
-            System.out.println("Ошибка во время чтения файла");
-        } finally { //TODO Возможно сделать так, чтобы проблемный файл пропускался вместо завершения чтения?
+            System.out.println("Ошибка во время чтения файлов"); //??? TODO Нужно ли это теперь?
+        } finally {
             isFinished.set(true);
         }
     }
@@ -44,18 +44,20 @@ public class FileProcessor implements Runnable {
 
         List<BufferedReader> readersLst = new ArrayList<>();
         for (String oneFilePath : filePathsLst) {
-            try {
-                readersLst.add(new BufferedReader(new FileReader(oneFilePath)));
-            } catch (IOException ee) {
-                System.out.println("Чтение файла: " + oneFilePath + " не удалось. Данные из этого файла не будут прочитаны");
+            if(!oneFilePath.isBlank()){
+                try {
+                    readersLst.add(new BufferedReader(new FileReader(oneFilePath)));
+                } catch (IOException ee) {
+                    System.out.println("Чтение файла: (" + oneFilePath + ") не удалось. Данные из этого файла не будут прочитаны");
+                }
             }
         }
         while (!readersLst.isEmpty()) {
             for (int i = 0; i < readersLst.size(); i++) {
                 var reader = readersLst.get(i);
-                String line = reader.readLine();
+                String line = tryingReadLine(reader);
                 if (line == null) {
-                    reader.close();
+                    closeReader(reader);
                     readersLst.remove(reader);
                     continue;
                 }
@@ -76,6 +78,20 @@ public class FileProcessor implements Runnable {
                 }
             }
         }
-        isFinished.set(true);
+    }
+    private String tryingReadLine(BufferedReader reader){
+        try{
+            return reader.readLine();
+        }catch (IOException ee){
+            System.out.println("Ошибка во время чтения одного из файлов, данные из него не будут читаться далее");
+        }
+        return null;
+    }
+    private void closeReader(BufferedReader reader){
+        try{
+            reader.close();
+        }catch (IOException ee){
+            System.out.println("Ошибка при закрытии потока чтения одного из файлов, данные могут быть прочитаны не полностью");
+        }
     }
 }
