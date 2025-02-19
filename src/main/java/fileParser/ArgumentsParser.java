@@ -9,10 +9,10 @@ import java.util.List;
 
 public class ArgumentsParser {
 
-    public SessionParametres parse(String[] args) throws FileNotFoundException {
+    public SessionParametres parse(String[] args) throws RuntimeException {
         StatisticsType statisticsType = StatisticsType.NONE;
         String prefix = "";
-        String resultsPath = ""; //   /path - корневой каталог, path - относительный путь
+        String resultsPath = System.getProperty("user.dir");
         boolean append = false;
         List<String> filesPathsLst = new ArrayList<>();
 
@@ -23,10 +23,11 @@ public class ArgumentsParser {
                 case "-a" -> append = true;
                 case "-p" -> prefix = args[++i];
                 case "-o" -> resultsPath = args[++i];
-                default -> filesPathsLst.add(args[i]);
+                default -> {
+                    if(!args[i].isBlank()) filesPathsLst.add(args[i]);}
             }
         }
-        if (filesPathsLst.isEmpty()) throw new FileNotFoundException();
+        if (filesPathsLst.isEmpty()) throw new RuntimeException();
 
         return new SessionParametres(
                 statisticsType,

@@ -16,10 +16,10 @@ public class Main {
     public static void main(String[] args) {
 
         String[] argsTEST = new String[9];
-        argsTEST[0] = "-o";
-        argsTEST[1] = "/papkaOne_19";//"/папка1/папка2";
+        argsTEST[0] = "";//-o
+        argsTEST[1] = "";//"/папка1/папка2";
         argsTEST[2] = "-p";
-        argsTEST[3] = "-prefix-";
+        argsTEST[3] = "-prefix-new";
         argsTEST[4] = "-f";
         argsTEST[5] = ""; //-a
         argsTEST[6] = "src/main/java/fileParser/file1.txt";
@@ -33,7 +33,8 @@ public class Main {
 
         try {//TODO не забыть заменить + проверки
             sessionParametres = argumentsParser.parse(argsTEST);
-        } catch (FileNotFoundException exc) {
+            //sessionParametres = argumentsParser.parse(args);
+        } catch (RuntimeException exc) {
             System.out.println("Пути файлов не были указаны");
             return;
         }
@@ -82,7 +83,7 @@ public class Main {
 
         printStatistics(sessionParametres, statisticsHolder);
 
-        System.out.println("Работа выполнена успешно 😎");
+        System.out.println("Работа выполнена успешно ");
     }
 
 
