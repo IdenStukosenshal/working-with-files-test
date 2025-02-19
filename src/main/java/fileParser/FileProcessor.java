@@ -29,27 +29,20 @@ public class FileProcessor implements Runnable {
 
     @Override
     public void run() {
-        try {
-            fileProcessing();
-        } catch (IOException eee) {
-            System.out.println("Ошибка во время чтения файлов"); //??? TODO Нужно ли это теперь?
-        } finally {
-            isFinished.set(true);
-        }
+        fileProcessing();
+        isFinished.set(true);
     }
 
-    public void fileProcessing() throws IOException {
+    public void fileProcessing() {
         Integer integerValue;
         Double doubleValue;
 
         List<BufferedReader> readersLst = new ArrayList<>();
         for (String oneFilePath : filePathsLst) {
-            if(!oneFilePath.isBlank()){
-                try {
-                    readersLst.add(new BufferedReader(new FileReader(oneFilePath)));
-                } catch (IOException ee) {
-                    System.out.println("Чтение файла: (" + oneFilePath + ") не удалось. Данные из этого файла не будут прочитаны");
-                }
+            try {
+                readersLst.add(new BufferedReader(new FileReader(oneFilePath)));
+            } catch (IOException ee) {
+                System.out.println("Чтение файла: (" + oneFilePath + ") не удалось. Данные из этого файла не будут прочитаны");
             }
         }
         while (!readersLst.isEmpty()) {
@@ -65,32 +58,34 @@ public class FileProcessor implements Runnable {
                 try {
                     integerValue = Integer.parseInt(line);
                     dataHolder.setOneInteger(integerValue);
-                    statisticsHolder.setIntegerStatistics(integerValue);
+                    statisticsHolder.increaseIntegerStatistics(integerValue);
                 } catch (NumberFormatException e) {
                     try {
                         doubleValue = Double.parseDouble(line);
                         dataHolder.setOneDouble(doubleValue);
-                        statisticsHolder.setDoubleStatistics(doubleValue);
+                        statisticsHolder.increaseDoubleStatistics(doubleValue);
                     } catch (NumberFormatException ex) {
                         dataHolder.setOneString(line);
-                        statisticsHolder.setStringStatistics(line);
+                        statisticsHolder.increaseStringStatistics(line);
                     }
                 }
             }
         }
     }
-    private String tryingReadLine(BufferedReader reader){
-        try{
+
+    private String tryingReadLine(BufferedReader reader) {
+        try {
             return reader.readLine();
-        }catch (IOException ee){
+        } catch (IOException ee) {
             System.out.println("Ошибка во время чтения одного из файлов, данные из него не будут читаться далее");
         }
         return null;
     }
-    private void closeReader(BufferedReader reader){
-        try{
+
+    private void closeReader(BufferedReader reader) {
+        try {
             reader.close();
-        }catch (IOException ee){
+        } catch (IOException ee) {
             System.out.println("Ошибка при закрытии потока чтения одного из файлов, данные могут быть прочитаны не полностью");
         }
     }

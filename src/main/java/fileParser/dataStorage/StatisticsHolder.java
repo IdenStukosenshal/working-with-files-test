@@ -30,7 +30,7 @@ public class StatisticsHolder {
         this.statisticsType = sessionParametres.statisticsType();
     }
 
-    public void setIntegerStatistics(Integer currentIntValue) {
+    public void increaseIntegerStatistics(Integer currentIntValue) {
         switch (statisticsType) {
             case NONE -> {
             }
@@ -64,7 +64,7 @@ public class StatisticsHolder {
         return "";
     }
 
-    public void setDoubleStatistics(Double currentValue) {
+    public void increaseDoubleStatistics(Double currentValue) {
         switch (statisticsType) {
             case NONE -> {
             }
@@ -98,7 +98,7 @@ public class StatisticsHolder {
         return "";
     }
 
-    public void setStringStatistics(String currentString) {
+    public void increaseStringStatistics(String currentString) {
         switch (statisticsType) {
             case NONE -> {
             }

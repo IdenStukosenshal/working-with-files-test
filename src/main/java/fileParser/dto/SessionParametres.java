@@ -12,9 +12,9 @@ public record SessionParametres(StatisticsType statisticsType,
         return "Данные будут прочитаны из файлов: \n" +
                 filesPathsLst.toString() + "\n" +
                 "Со следующими параметрами: \n" +
-                "* путь файлов результата: " + (!resultsPath.isEmpty() ? resultsPath : "корневой каталог") + "\n" +
+                "* путь файлов результата: " + resultsPath + "\n" +
                 "* префикс имён файлов: " + prefix + "\n" +
                 "* добавить в конец файлов(вместо перезаписи): " + (append ? "да" : "нет") + "\n" +
-                "* тип статистики: " + statisticsType.getMsg() + "\n";
+                "* тип статистики: " + statisticsType.getMsg();
     }
 }
