@@ -12,7 +12,7 @@ public class ArgumentsParser {
     public SessionParametres parse(String[] args) throws FileNotFoundException {
         StatisticsType statisticsType = StatisticsType.NONE;
         String prefix = "";
-        String resultsPath = ""; //корневой каталог
+        String resultsPath = ""; //   /path - корневой каталог, path - относительный путь
         boolean append = false;
         List<String> filesPathsLst = new ArrayList<>();
 

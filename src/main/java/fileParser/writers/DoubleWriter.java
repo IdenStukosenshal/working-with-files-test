@@ -24,17 +24,17 @@ public class DoubleWriter implements Runnable {
 
     @Override
     public void run() {
-
-        String separator = File.separator;
         String outputPath = sessionParametres.resultsPath() +
-                separator + sessionParametres.prefix() + "floats.txt";
-
+                File.separator + sessionParametres.prefix() + "floats.txt";
         File fileDouble = new File(outputPath);
-        fileDouble.getParentFile().mkdirs();
-        try (BufferedWriter bfwriter = new BufferedWriter(new FileWriter(fileDouble, sessionParametres.append()))) {
+        BufferedWriter bfwriter = null;
+        try {
             while (true) {
                 Double doubleValue = dataHolder.getOneDouble();
                 if (doubleValue != null) {
+                    if (bfwriter == null) {
+                        bfwriter = new BufferedWriter(new FileWriter(fileDouble, sessionParametres.append()));
+                    }
                     bfwriter.write(String.valueOf(doubleValue));
                     bfwriter.newLine();
                 } else if (isFinished.get() && dataHolder.getDoublesQueue().isEmpty()) {
@@ -43,6 +43,14 @@ public class DoubleWriter implements Runnable {
             }
         } catch (IOException ee) {
             System.out.println("Не удалось создать/открыть файл: " + sessionParametres.prefix() + "floats.txt");
+        } finally {
+            if (bfwriter != null) {
+                try {
+                    bfwriter.close();
+                } catch (IOException ee) {
+                    System.out.println("Ошибка при попытке закрыть поток записи, часть информации может быть утеряна");
+                }
+            }
         }
     }
 }

@@ -45,18 +45,20 @@ public class StatisticsHolder {
     }
 
     public String getIntegerStatistics() {
-        switch (statisticsType) {
-            case SHORT -> {
-                return "Integer Statistics: \n" +
-                        "количество чисел: " + integerCountNumbers;
-            }
-            case FULL -> {
-                return "Integer Statistics: \n" +
-                        "количество чисел: " + integerCountNumbers +
-                        ", минимальное значение: " + integerMinNumber +
-                        ", максимальное значение: " + integerMaxNumber +
-                        ", сумма всех значений: " + integerSumNumbers.toString() +
-                        ", среднее значение: " + calculateMidInteger();
+        if (integerCountNumbers != 0) {
+            switch (statisticsType) {
+                case SHORT -> {
+                    return "Integer Statistics: \n" +
+                            "количество чисел: " + integerCountNumbers +"\n";
+                }
+                case FULL -> {
+                    return "Integer Statistics: \n" +
+                            "количество чисел: " + integerCountNumbers +
+                            ", минимальное значение: " + integerMinNumber +
+                            ", максимальное значение: " + integerMaxNumber +
+                            ", сумма всех значений: " + integerSumNumbers.toString() +
+                            ", среднее значение: " + calculateMidInteger() +"\n";
+                }
             }
         }
         return "";
@@ -77,18 +79,20 @@ public class StatisticsHolder {
     }
 
     public String getDoubleStatistics() {
-        switch (statisticsType) {
-            case SHORT -> {
-                return "Float Statistics: \n" +
-                        "количество чисел: " + doubleCountNumbers;
-            }
-            case FULL -> {
-                return "Float Statistics: \n" +
-                        "количество чисел: " + doubleCountNumbers +
-                        ", минимальное значение: " + doubleMinNumber +
-                        ", максимальное значение: " + doubleMaxNumber +
-                        ", сумма всех значений: " + doubleSumNumbers +
-                        ", среднее значение: " + calculateMidDouble();
+        if (doubleCountNumbers != 0) {
+            switch (statisticsType) {
+                case SHORT -> {
+                    return "Float Statistics: \n" +
+                            "количество чисел: " + doubleCountNumbers +"\n";
+                }
+                case FULL -> {
+                    return "Float Statistics: \n" +
+                            "количество чисел: " + doubleCountNumbers +
+                            ", минимальное значение: " + doubleMinNumber +
+                            ", максимальное значение: " + doubleMaxNumber +
+                            ", сумма всех значений: " + doubleSumNumbers +
+                            ", среднее значение: " + calculateMidDouble() +"\n";
+                }
             }
         }
         return "";
@@ -108,16 +112,18 @@ public class StatisticsHolder {
     }
 
     public String getStringStatistics() {
-        switch (statisticsType) {
-            case SHORT -> {
-                return "String Statistics :\n" +
-                        "количество строк: " + stringCount;
-            }
-            case FULL -> {
-                return "String Statistics :\n" +
-                        "количество строк: " + stringCount +
-                        ", минимальная длина строки: " + stringMinLength + " символов" +
-                        ", максимальная длина строки: " + stringMaxLength + " символов";
+        if (stringCount != 0) {
+            switch (statisticsType) {
+                case SHORT -> {
+                    return "String Statistics :\n" +
+                            "количество строк: " + stringCount +"\n";
+                }
+                case FULL -> {
+                    return "String Statistics :\n" +
+                            "количество строк: " + stringCount +
+                            ", минимальная длина строки: " + stringMinLength + " символов" +
+                            ", максимальная длина строки: " + stringMaxLength + " символов" +"\n";
+                }
             }
         }
         return "";
@@ -132,4 +138,3 @@ public class StatisticsHolder {
         return doubleSumNumbers.divide(BigDecimal.valueOf(doubleCountNumbers), 3, RoundingMode.HALF_UP);
     }
 }
-

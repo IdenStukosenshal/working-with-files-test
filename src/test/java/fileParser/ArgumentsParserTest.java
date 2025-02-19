@@ -11,12 +11,6 @@ class ArgumentsParserTest {
     void parse() {
     }
 
-    @Test
-    void parse() {
-    }
 
-    @Test
-    void parse() {
-    }
 
 }

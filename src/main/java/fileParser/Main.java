@@ -7,6 +7,7 @@ import fileParser.writers.DoubleWriter;
 import fileParser.writers.IntegerWriter;
 import fileParser.writers.StringWriter;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -16,11 +17,11 @@ public class Main {
 
         String[] argsTEST = new String[9];
         argsTEST[0] = "-o";
-        argsTEST[1] = "";//"/папка1/папка2";
+        argsTEST[1] = "/papkaOne_19";//"/папка1/папка2";
         argsTEST[2] = "-p";
         argsTEST[3] = "-prefix-";
         argsTEST[4] = "-f";
-        argsTEST[5] = "-a";
+        argsTEST[5] = ""; //-a
         argsTEST[6] = "src/main/java/fileParser/file1.txt";
         argsTEST[7] = "src/main/java/fileParser/file2.txt";
         argsTEST[8] = "src/main/java/fileParser/file3.txt";
@@ -36,6 +37,7 @@ public class Main {
             System.out.println("Пути файлов не были указаны");
             return;
         }
+        createDirectories(sessionParametres.resultsPath());
         StatisticsHolder statisticsHolder = new StatisticsHolder(sessionParametres);
 
         System.out.println(sessionParametres.getMessage());
@@ -78,12 +80,21 @@ public class Main {
             System.out.println("Прерывание работы программы по неизвестным причинам");
         }
 
-        if(sessionParametres.statisticsType() != StatisticsType.NONE){
-            System.out.println(statisticsHolder.getIntegerStatistics() + "\n" +
-                    statisticsHolder.getDoubleStatistics() + "\n" +
-                    statisticsHolder.getStringStatistics());
-        }
+        printStatistics(sessionParametres, statisticsHolder);
 
         System.out.println("Работа выполнена успешно 😎");
+    }
+
+
+    private static void createDirectories(String path){
+        File structure = new File(path);
+        structure.mkdirs();
+    }
+    private static void printStatistics(SessionParametres sessionParametres, StatisticsHolder statisticsHolder){
+        if(sessionParametres.statisticsType() != StatisticsType.NONE){
+            System.out.println(statisticsHolder.getIntegerStatistics() +
+                    statisticsHolder.getDoubleStatistics() +
+                    statisticsHolder.getStringStatistics());
+        }
     }
 }
