@@ -20,10 +20,15 @@ public class ArgumentsParser {
                 case "-s" -> statisticsType = StatisticsType.SHORT;
                 case "-f" -> statisticsType = StatisticsType.FULL;
                 case "-a" -> append = true;
-                case "-p" -> prefix = args[++i];
-                case "-o" -> resultsPath = args[++i];
+                case "-p" -> {
+                    if (i < args.length - 1) prefix = args[++i];
+                }
+                case "-o" -> {
+                    if (i < args.length - 1) resultsPath = args[++i];
+                }
                 default -> {
-                    if(!args[i].isBlank()) filesPathsLst.add(args[i]);}
+                    if (!args[i].isBlank()) filesPathsLst.add(args[i]);
+                }
             }
         }
         if (filesPathsLst.isEmpty()) throw new RuntimeException();
