@@ -25,13 +25,13 @@ public class Main {
             System.out.println("Пути файлов не были указаны");
             return;
         }
-        createDirectories(sessionParametres.resultsPath());
+        createDirectories(sessionParametres.getResultsPath());
         StatisticsHolder statisticsHolder = new StatisticsHolder(sessionParametres);
 
         System.out.println(sessionParametres.getMessage());
 
         Runnable fileProcessor = new FileProcessor(
-                sessionParametres.filesPathsLst(),
+                sessionParametres.getFilesPathsLst(),
                 dataHolder,
                 statisticsHolder,
                 isFinished);
@@ -79,7 +79,7 @@ public class Main {
         structure.mkdirs();
     }
     private static void printStatistics(SessionParametres sessionParametres, StatisticsHolder statisticsHolder){
-        if(sessionParametres.statisticsType() != StatisticsType.NONE){
+        if(sessionParametres.getStatisticsType() != StatisticsType.NONE){
             System.out.println(statisticsHolder.getIntegerStatistics() +
                     statisticsHolder.getDoubleStatistics() +
                     statisticsHolder.getStringStatistics());

@@ -27,7 +27,7 @@ public class StatisticsHolder {
     private Integer stringMaxLength = 0;
 
     public StatisticsHolder(SessionParametres sessionParametres) {
-        this.statisticsType = sessionParametres.statisticsType();
+        this.statisticsType = sessionParametres.getStatisticsType();
     }
 
     public void increaseIntegerStatistics(Integer currentIntValue) {

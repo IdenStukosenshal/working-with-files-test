@@ -25,8 +25,8 @@ public class IntegerWriter implements Runnable {
 
     @Override
     public void run(){
-        String outputPath = sessionParametres.resultsPath() +
-                File.separator + sessionParametres.prefix() + "integers.txt";
+        String outputPath = sessionParametres.getResultsPath() +
+                File.separator + sessionParametres.getPrefix() + "integers.txt";
         File fileInteger = new File(outputPath);
         BufferedWriter bfwriter = null;
         try {
@@ -34,16 +34,17 @@ public class IntegerWriter implements Runnable {
                 Integer integerValue = dataHolder.getOneInteger();
                 if (integerValue != null) {
                     if (bfwriter == null) {
-                        bfwriter = new BufferedWriter(new FileWriter(fileInteger, sessionParametres.append()));
+                        bfwriter = new BufferedWriter(new FileWriter(fileInteger, sessionParametres.getAppend()));
                     }
                     bfwriter.write(String.valueOf(integerValue));
                     bfwriter.newLine();
+                    bfwriter.flush();
                 } else if (isFinished.get() && dataHolder.getIntegersQueue().isEmpty()) {
                     break;
                 }
             }
         } catch (IOException ee) {
-            System.out.println("Не удалось создать/открыть файл: " + sessionParametres.prefix() + "integers.txt");
+            System.out.println("Не удалось создать/открыть файл: " + sessionParametres.getPrefix() + "integers.txt");
         } finally {
             if (bfwriter != null) {
                 try {

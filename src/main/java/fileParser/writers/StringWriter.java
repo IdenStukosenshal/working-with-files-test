@@ -25,8 +25,8 @@ public class StringWriter implements Runnable {
     @Override
     public void run() {
 
-        String outputPath = sessionParametres.resultsPath() +
-                File.separator + sessionParametres.prefix() + "strings.txt";
+        String outputPath = sessionParametres.getResultsPath() +
+                File.separator + sessionParametres.getPrefix() + "strings.txt";
         File fileString = new File(outputPath);
         BufferedWriter bfwriter = null;
         try {
@@ -34,16 +34,17 @@ public class StringWriter implements Runnable {
                 String stringValue = dataHolder.getOneString();
                 if (stringValue != null) {
                     if (bfwriter == null) {
-                        bfwriter = new BufferedWriter(new FileWriter(fileString, sessionParametres.append()));
+                        bfwriter = new BufferedWriter(new FileWriter(fileString, sessionParametres.getAppend()));
                     }
                     bfwriter.write(stringValue);
                     bfwriter.newLine();
+                    bfwriter.flush();
                 } else if (isFinished.get() && dataHolder.getStringsQueue().isEmpty()) {
                     break;
                 }
             }
         } catch (IOException ee) {
-            System.out.println("Не удалось создать/открыть файл: " + sessionParametres.prefix() + "strings.txt");
+            System.out.println("Не удалось создать/открыть файл: " + sessionParametres.getPrefix() + "strings.txt");
         } finally {
             if (bfwriter != null) {
                 try {

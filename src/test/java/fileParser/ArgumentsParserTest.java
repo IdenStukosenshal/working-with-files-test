@@ -35,12 +35,12 @@ class ArgumentsParserTest {
 
         assertEquals(
                 List.of("path1/name1", "path2/name2"),
-                sessionParametres.filesPathsLst()
+                sessionParametres.getFilesPathsLst()
         );
-        assertEquals(true, sessionParametres.append());
-        assertEquals(StatisticsType.FULL, sessionParametres.statisticsType());
-        assertEquals("-prefix-", sessionParametres.prefix());
-        assertEquals("res/path/", sessionParametres.resultsPath());
+        assertEquals(true, sessionParametres.getAppend());
+        assertEquals(StatisticsType.FULL, sessionParametres.getStatisticsType());
+        assertEquals("-prefix-", sessionParametres.getPrefix());
+        assertEquals("res/path/", sessionParametres.getResultsPath());
 
     }
 
@@ -59,11 +59,11 @@ class ArgumentsParserTest {
 
         sessionParametres = argumentsParser.parse(massive);
 
-        assertEquals("", sessionParametres.prefix());
-        assertEquals(System.getProperty("user.dir"), sessionParametres.resultsPath());
-        assertEquals(false, sessionParametres.append());
-        assertEquals(StatisticsType.NONE, sessionParametres.statisticsType());
-        assertEquals(Arrays.stream(massive).collect(Collectors.toList()), sessionParametres.filesPathsLst());
+        assertEquals("", sessionParametres.getPrefix());
+        assertEquals(System.getProperty("user.dir"), sessionParametres.getResultsPath());
+        assertEquals(false, sessionParametres.getAppend());
+        assertEquals(StatisticsType.NONE, sessionParametres.getStatisticsType());
+        assertEquals(Arrays.stream(massive).collect(Collectors.toList()), sessionParametres.getFilesPathsLst());
     }
 
 
@@ -89,69 +89,69 @@ class ArgumentsParserTest {
     public void shortFlagGeneratesShortStatistics() {
         String[] massive = new String[]{"-s", "file"};
         sessionParametres = argumentsParser.parse(massive);
-        assertEquals(StatisticsType.SHORT, sessionParametres.statisticsType());
+        assertEquals(StatisticsType.SHORT, sessionParametres.getStatisticsType());
     }
 
     @Test
     public void fullFlagGeneratesFullStatistics() {
         String[] massive = new String[]{"-f", "file"};
         sessionParametres = argumentsParser.parse(massive);
-        assertEquals(StatisticsType.FULL, sessionParametres.statisticsType());
+        assertEquals(StatisticsType.FULL, sessionParametres.getStatisticsType());
     }
 
     @Test
     public void multipleOppositeStatisticFlagsCausesTheLastToSet() {
         String[] massive = new String[]{"-f", "-s", "-f", "-s", "file"};
         sessionParametres = argumentsParser.parse(massive);
-        assertEquals(StatisticsType.SHORT, sessionParametres.statisticsType());
+        assertEquals(StatisticsType.SHORT, sessionParametres.getStatisticsType());
     }
 
     @Test
     public void appendFlagSetsAppendSettings() {
         String[] massive = new String[]{"file", "-a"};
         sessionParametres = argumentsParser.parse(massive);
-        assertEquals(true, sessionParametres.append());
+        assertEquals(true, sessionParametres.getAppend());
     }
 
     @Test
     public void prefixFlagSetsPrefixSettings() {
         String[] massive = new String[]{"file", "-p", "-my-prefix"};
         sessionParametres = argumentsParser.parse(massive);
-        assertEquals("-my-prefix", sessionParametres.prefix());
+        assertEquals("-my-prefix", sessionParametres.getPrefix());
     }
 
     @Test
     public void prefixFlagWithoutValueSetsDefaultPrefixSettings() {
         String[] massive = new String[]{"file", "-p"};
         sessionParametres = argumentsParser.parse(massive);
-        assertEquals("", sessionParametres.prefix());
+        assertEquals("", sessionParametres.getPrefix());
     }
 
     @Test
     public void multiplePrefixFlagCausesTheLastToSet() {
         String[] massive = new String[]{"file", "-p", "prefix-one", "-p", "prefix-two", "-p", "prefix-three"};
         sessionParametres = argumentsParser.parse(massive);
-        assertEquals("prefix-three", sessionParametres.prefix());
+        assertEquals("prefix-three", sessionParametres.getPrefix());
     }
 
     @Test
     public void outputFlagSetsResultsPathSettings() {
         String[] massive = new String[]{"file", "-o", "result/path"};
         sessionParametres = argumentsParser.parse(massive);
-        assertEquals("result/path", sessionParametres.resultsPath());
+        assertEquals("result/path", sessionParametres.getResultsPath());
     }
 
     @Test
     public void outputFlagWithoutValueSetsResultsPathDefaultSettings() {
         String[] massive = new String[]{"file", "-o"};
         sessionParametres = argumentsParser.parse(massive);
-        assertEquals(System.getProperty("user.dir"), sessionParametres.resultsPath());
+        assertEquals(System.getProperty("user.dir"), sessionParametres.getResultsPath());
     }
 
     @Test
     public void multipleOutputFlagCausesTheLastToSet() {
         String[] massive = new String[]{"file", "-o", "result1", "-o", "result2"};
         sessionParametres = argumentsParser.parse(massive);
-        assertEquals("result2", sessionParametres.resultsPath());
+        assertEquals("result2", sessionParametres.getResultsPath());
     }
 }

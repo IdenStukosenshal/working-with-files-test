@@ -3,42 +3,29 @@ package fileParser;
 import fileParser.dto.SessionParametres;
 import fileParser.dto.StatisticsType;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ArgumentsParser {
 
     public SessionParametres parse(String[] args) throws RuntimeException {
-        StatisticsType statisticsType = StatisticsType.NONE;
-        String prefix = "";
-        String resultsPath = System.getProperty("user.dir");
-        boolean append = false;
-        List<String> filesPathsLst = new ArrayList<>();
+        SessionParametres sessionParametres = new SessionParametres();
 
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
-                case "-s" -> statisticsType = StatisticsType.SHORT;
-                case "-f" -> statisticsType = StatisticsType.FULL;
-                case "-a" -> append = true;
+                case "-s" -> sessionParametres.setStatisticsType(StatisticsType.SHORT);
+                case "-f" -> sessionParametres.setStatisticsType(StatisticsType.FULL);
+                case "-a" -> sessionParametres.setAppend(true);
                 case "-p" -> {
-                    if (i < args.length - 1) prefix = args[++i];
+                    if (i < args.length - 1) sessionParametres.setPrefix(args[++i]);
                 }
                 case "-o" -> {
-                    if (i < args.length - 1) resultsPath = args[++i];
+                    if (i < args.length - 1) sessionParametres.setResultsPath(args[++i]);
                 }
                 default -> {
-                    if (!args[i].isBlank()) filesPathsLst.add(args[i]);
+                    if (!args[i].isBlank()) sessionParametres.addToFilesPathsLst(args[i]);
                 }
             }
         }
-        if (filesPathsLst.isEmpty()) throw new RuntimeException();
+        if (sessionParametres.getFilesPathsLst().isEmpty()) throw new RuntimeException();
 
-        return new SessionParametres(
-                statisticsType,
-                prefix,
-                resultsPath,
-                append,
-                filesPathsLst
-        );
+        return sessionParametres;
     }
 }
