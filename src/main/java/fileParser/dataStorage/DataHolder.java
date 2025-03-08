@@ -1,12 +1,13 @@
 package fileParser.dataStorage;
 
+import java.math.BigInteger;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class DataHolder {
 
     private final Queue<String> stringsQ = new ConcurrentLinkedQueue<>();
-    private final Queue<Integer> integersQ = new ConcurrentLinkedQueue<>();
+    private final Queue<BigInteger> bigIntegersQ = new ConcurrentLinkedQueue<>();
     private final Queue<Double> doublesQ = new ConcurrentLinkedQueue<>();
 
     public String getOneString() {
@@ -17,12 +18,12 @@ public class DataHolder {
         stringsQ.offer(line);
     }
 
-    public Integer getOneInteger() {
-        return integersQ.poll();
+    public BigInteger getOneBigInteger() {
+        return bigIntegersQ.poll();
     }
 
-    public void setOneInteger(Integer oneInteger){
-        integersQ.offer(oneInteger);
+    public void setOneBigInteger(BigInteger oneInteger){
+        bigIntegersQ.offer(oneInteger);
     }
 
     public Double getOneDouble() {
@@ -37,8 +38,8 @@ public class DataHolder {
         return stringsQ;
     }
 
-    public Queue<Integer> getIntegersQueue() {
-        return integersQ;
+    public Queue<BigInteger> getBigIntegersQueue() {
+        return bigIntegersQ;
     }
 
     public Queue<Double> getDoublesQueue() {

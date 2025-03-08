@@ -11,12 +11,12 @@ public class StatisticsHolder {
 
     private final StatisticsType statisticsType;
 
-    private Long integerCountNumbers = 0L;
-    private Integer integerMinNumber = Integer.MAX_VALUE;
-    private Integer integerMaxNumber = Integer.MIN_VALUE;
-    private BigInteger integerSumNumbers = BigInteger.valueOf(0);
+    private Long countBigIntegerNumbers = 0L;
+    private BigInteger bigIntegerMinNumber = null;
+    private BigInteger bigIntegerMaxNumber = null;
+    private BigInteger bigIntegerSumNumbers = BigInteger.ZERO;
 
-    private Long doubleCountNumbers = 0L;
+    private Long countDoubleNumbers = 0L;
     private Double doubleMinNumber = Double.MAX_VALUE;
     private Double doubleMaxNumber = Double.MIN_VALUE;
     private BigDecimal doubleSumNumbers = BigDecimal.valueOf(0);
@@ -30,33 +30,37 @@ public class StatisticsHolder {
         this.statisticsType = sessionParametres.getStatisticsType();
     }
 
-    public void increaseIntegerStatistics(Integer currentIntValue) {
+    public void increaseBigIntegerStatistics(BigInteger currentIntValue) {
         switch (statisticsType) {
             case NONE -> {
             }
-            case SHORT -> integerCountNumbers++;
+            case SHORT -> countBigIntegerNumbers++;
             case FULL -> {
-                integerCountNumbers++;
-                if (currentIntValue < integerMinNumber) integerMinNumber = currentIntValue;
-                if (currentIntValue > integerMaxNumber) integerMaxNumber = currentIntValue;
-                integerSumNumbers = integerSumNumbers.add(BigInteger.valueOf(currentIntValue));
+                if(bigIntegerMinNumber == null || currentIntValue.compareTo(bigIntegerMinNumber) < 0){
+                    bigIntegerMinNumber = currentIntValue;
+                }
+                if(bigIntegerMaxNumber == null || currentIntValue.compareTo(bigIntegerMaxNumber)>0){
+                    bigIntegerMaxNumber = currentIntValue;
+                }
+                countBigIntegerNumbers++;
+                bigIntegerSumNumbers = bigIntegerSumNumbers.add(currentIntValue);
             }
         }
     }
 
     public String getIntegerStatistics() {
-        if (integerCountNumbers != 0) {
+        if (countBigIntegerNumbers != 0) {
             switch (statisticsType) {
                 case SHORT -> {
                     return "Integer Statistics: \n" +
-                            "количество чисел: " + integerCountNumbers +"\n";
+                            "количество чисел: " + countBigIntegerNumbers +"\n";
                 }
                 case FULL -> {
                     return "Integer Statistics: \n" +
-                            "количество чисел: " + integerCountNumbers +
-                            ", минимальное значение: " + integerMinNumber +
-                            ", максимальное значение: " + integerMaxNumber +
-                            ", сумма всех значений: " + integerSumNumbers.toString() +
+                            "количество чисел: " + countBigIntegerNumbers +
+                            ", минимальное значение: " + bigIntegerMinNumber +
+                            ", максимальное значение: " + bigIntegerMaxNumber +
+                            ", сумма всех значений: " + bigIntegerSumNumbers.toString() +
                             ", среднее значение: " + calculateMidInteger() +"\n";
                 }
             }
@@ -68,9 +72,9 @@ public class StatisticsHolder {
         switch (statisticsType) {
             case NONE -> {
             }
-            case SHORT -> doubleCountNumbers++;
+            case SHORT -> countDoubleNumbers++;
             case FULL -> {
-                doubleCountNumbers++;
+                countDoubleNumbers++;
                 if (currentValue < doubleMinNumber) doubleMinNumber = currentValue;
                 if (currentValue > doubleMaxNumber) doubleMaxNumber = currentValue;
                 doubleSumNumbers = doubleSumNumbers.add(BigDecimal.valueOf(currentValue));
@@ -79,15 +83,15 @@ public class StatisticsHolder {
     }
 
     public String getDoubleStatistics() {
-        if (doubleCountNumbers != 0) {
+        if (countDoubleNumbers != 0) {
             switch (statisticsType) {
                 case SHORT -> {
                     return "Float Statistics: \n" +
-                            "количество чисел: " + doubleCountNumbers +"\n";
+                            "количество чисел: " + countDoubleNumbers +"\n";
                 }
                 case FULL -> {
                     return "Float Statistics: \n" +
-                            "количество чисел: " + doubleCountNumbers +
+                            "количество чисел: " + countDoubleNumbers +
                             ", минимальное значение: " + doubleMinNumber +
                             ", максимальное значение: " + doubleMaxNumber +
                             ", сумма всех значений: " + doubleSumNumbers +
@@ -130,11 +134,11 @@ public class StatisticsHolder {
     }
 
     private BigDecimal calculateMidInteger() {
-        BigDecimal result = new BigDecimal(integerSumNumbers.toString());
-        return result.divide(BigDecimal.valueOf(integerCountNumbers), 3, RoundingMode.HALF_UP);
+        BigDecimal result = new BigDecimal(bigIntegerSumNumbers.toString());
+        return result.divide(BigDecimal.valueOf(countBigIntegerNumbers), 3, RoundingMode.HALF_UP);
     }
 
     private BigDecimal calculateMidDouble() {
-        return doubleSumNumbers.divide(BigDecimal.valueOf(doubleCountNumbers), 3, RoundingMode.HALF_UP);
+        return doubleSumNumbers.divide(BigDecimal.valueOf(countDoubleNumbers), 3, RoundingMode.HALF_UP);
     }
 }

@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class IntegerWriter implements Runnable {
@@ -31,15 +32,15 @@ public class IntegerWriter implements Runnable {
         BufferedWriter bfwriter = null;
         try {
             while (true) {
-                Integer integerValue = dataHolder.getOneInteger();
-                if (integerValue != null) {
+                BigInteger bigIntegerValue = dataHolder.getOneBigInteger();
+                if (bigIntegerValue != null) {
                     if (bfwriter == null) {
                         bfwriter = new BufferedWriter(new FileWriter(fileInteger, sessionParametres.getAppend()));
                     }
-                    bfwriter.write(String.valueOf(integerValue));
+                    bfwriter.write(bigIntegerValue.toString());
                     bfwriter.newLine();
                     bfwriter.flush();
-                } else if (isFinished.get() && dataHolder.getIntegersQueue().isEmpty()) {
+                } else if (isFinished.get() && dataHolder.getBigIntegersQueue().isEmpty()) {
                     break;
                 }
             }

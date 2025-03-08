@@ -6,6 +6,7 @@ import fileParser.dataStorage.StatisticsHolder;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -34,7 +35,7 @@ public class FileProcessor implements Runnable {
     }
 
     public void fileProcessing() {
-        Integer integerValue;
+        BigInteger bigIntegerValue;
         Double doubleValue;
 
         List<BufferedReader> readersLst = new ArrayList<>();
@@ -56,9 +57,9 @@ public class FileProcessor implements Runnable {
                 }
                 if (line.isEmpty()) continue;
                 try {
-                    integerValue = Integer.parseInt(line);
-                    dataHolder.setOneInteger(integerValue);
-                    statisticsHolder.increaseIntegerStatistics(integerValue);
+                    bigIntegerValue = new BigInteger(line);
+                    dataHolder.setOneBigInteger(bigIntegerValue);
+                    statisticsHolder.increaseBigIntegerStatistics(bigIntegerValue);
                 } catch (NumberFormatException e) {
                     try {
                         doubleValue = Double.parseDouble(line);

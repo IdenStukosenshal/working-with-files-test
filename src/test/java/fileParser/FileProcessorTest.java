@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -56,13 +57,13 @@ class FileProcessorTest {
         assertTrue(isFinished.get());
         assertEquals("row number 1", dataHolder.getOneString());
         assertEquals("row number 2", dataHolder.getOneString());
-        assertEquals(10, dataHolder.getOneInteger());
-        assertEquals(20, dataHolder.getOneInteger());
+        assertEquals(BigInteger.valueOf(10), dataHolder.getOneBigInteger());
+        assertEquals(BigInteger.valueOf(20), dataHolder.getOneBigInteger());
         assertEquals(1.11, dataHolder.getOneDouble(), 0.005);
         assertEquals(2.22, dataHolder.getOneDouble(), 0.005);
         assertTrue(
                 dataHolder.getDoublesQueue().isEmpty() &&
-                        dataHolder.getIntegersQueue().isEmpty() &&
+                        dataHolder.getBigIntegersQueue().isEmpty() &&
                         dataHolder.getStringsQueue().isEmpty()
         );
     }
@@ -79,13 +80,39 @@ class FileProcessorTest {
         runAndWaitThread(fileProcessor);
 
         assertTrue(isFinished.get());
-        List<Integer> resultList = dataHolder.getIntegersQueue().stream().toList();
-        assertEquals(List.of(8, 16, 21, 42), resultList);
+        List<BigInteger> resultList = dataHolder.getBigIntegersQueue().stream().toList();
+        List<BigInteger> expectedLst = List.of(BigInteger.valueOf(8), BigInteger.valueOf(16), BigInteger.valueOf(21), BigInteger.valueOf(42));
+        assertEquals(expectedLst, resultList);
         assertTrue(
                 dataHolder.getDoublesQueue().isEmpty() &&
                         dataHolder.getStringsQueue().isEmpty()
         );
     }
+
+    @Test
+    public void filesContainsBigIntegersCausesCorrectResult() throws Exception {
+        String numba1 = "908236476234312659837845962347624354872487648234234";
+        String numba2 = "8724876482342340974854724526544532343453454598890123321321567854";
+        String numba3 = "562";
+        Runnable fileProcessor = createDefaultFileProcessorObj();
+        try (FileWriter fileWriter = new FileWriter(filesLst.get(0))) {
+            fileWriter.write(numba1 + "\n");
+            fileWriter.write(numba2 + "\n");
+            fileWriter.write(numba3);
+        }
+
+        runAndWaitThread(fileProcessor);
+
+        assertTrue(isFinished.get());
+        assertTrue(
+                dataHolder.getDoublesQueue().isEmpty() &&
+                        dataHolder.getStringsQueue().isEmpty()
+        );
+        List<BigInteger> resultList = dataHolder.getBigIntegersQueue().stream().toList();
+        List<BigInteger> expectedLst = List.of(new BigInteger(numba1), new BigInteger(numba2), new BigInteger(numba3));
+        assertEquals(expectedLst, resultList);
+    }
+
 
     @Test
     public void filesContainsOnlyDoublesCausesOnlyDoublesResult() throws Exception {
@@ -102,7 +129,7 @@ class FileProcessorTest {
         List<Double> resultList = dataHolder.getDoublesQueue().stream().toList();
         assertEquals(List.of(1.2, 2.4, 1.3, 2.6), resultList);
         assertTrue(
-                dataHolder.getIntegersQueue().isEmpty() &&
+                dataHolder.getBigIntegersQueue().isEmpty() &&
                         dataHolder.getStringsQueue().isEmpty()
         );
 
@@ -123,7 +150,7 @@ class FileProcessorTest {
         List<String> resultList = dataHolder.getStringsQueue().stream().toList();
         assertEquals(List.of("row 2", "row 4", "row 3", "row 6"), resultList);
         assertTrue(
-                dataHolder.getIntegersQueue().isEmpty() &&
+                dataHolder.getBigIntegersQueue().isEmpty() &&
                         dataHolder.getDoublesQueue().isEmpty()
         );
     }
@@ -141,7 +168,7 @@ class FileProcessorTest {
         assertTrue(isFinished.get());
         assertTrue(
                 dataHolder.getDoublesQueue().isEmpty() &&
-                        dataHolder.getIntegersQueue().isEmpty() &&
+                        dataHolder.getBigIntegersQueue().isEmpty() &&
                         dataHolder.getStringsQueue().isEmpty()
         );
     }
@@ -159,7 +186,7 @@ class FileProcessorTest {
         assertTrue(isFinished.get());
         assertTrue(
                 dataHolder.getDoublesQueue().isEmpty() &&
-                        dataHolder.getIntegersQueue().isEmpty() &&
+                        dataHolder.getBigIntegersQueue().isEmpty() &&
                         dataHolder.getStringsQueue().isEmpty()
         );
     }
@@ -181,17 +208,17 @@ class FileProcessorTest {
         runAndWaitThread(fileProcessor);
 
         assertTrue(isFinished.get());
-        assertEquals(100500, dataHolder.getOneInteger());
+        assertEquals(BigInteger.valueOf(100500), dataHolder.getOneBigInteger());
         assertEquals("first row", dataHolder.getOneString());
         assertEquals(3.14, dataHolder.getOneDouble());
         assertTrue(
                 dataHolder.getDoublesQueue().isEmpty() &&
-                        dataHolder.getIntegersQueue().isEmpty() &&
+                        dataHolder.getBigIntegersQueue().isEmpty() &&
                         dataHolder.getStringsQueue().isEmpty()
         );
     }
 
-    private Runnable createDefaultFileProcessorObj(){
+    private Runnable createDefaultFileProcessorObj() {
         return new FileProcessor(
                 filesLst.stream().map(File::getAbsolutePath).collect(Collectors.toList()),
                 dataHolder,
