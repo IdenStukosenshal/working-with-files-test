@@ -16,7 +16,7 @@
 2. Открыть командную строку в директории с файлом .jar
 3. Запустить командой:
 ```
-java -cp file-parser-test-1.0.jar fileParser.Main <параметры и пути файлов>
+java -jar file-parser-test-1.0.jar <параметры и пути файлов>
 ```
 
 ## Параметры:
@@ -41,6 +41,6 @@ java -cp file-parser-test-1.0.jar fileParser.Main <параметры и пут�
 
 Пример команды запуска:
 ```
-java -cp file-parser-test-1.0.jar fileParser.Main -a -s -p -prefix- -o path file1.txt file2.txt file3.txt
+java -jar file-parser-test-1.0.jar -a -s -p -prefix- -o path file1.txt file2.txt file3.txt
 ```
 
