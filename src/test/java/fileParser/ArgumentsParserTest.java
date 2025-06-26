@@ -2,6 +2,7 @@ package fileParser;
 
 import fileParser.dto.SessionParametres;
 import fileParser.dto.StatisticsType;
+import fileParser.utils.ArgumentsParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

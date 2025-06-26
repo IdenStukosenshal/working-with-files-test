@@ -1,4 +1,4 @@
-package fileParser;
+package fileParser.utils;
 
 import fileParser.dto.SessionParametres;
 import fileParser.dto.StatisticsType;

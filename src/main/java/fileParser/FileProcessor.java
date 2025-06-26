@@ -2,6 +2,7 @@ package fileParser;
 
 import fileParser.dataStorage.DataHolder;
 import fileParser.dataStorage.StatisticsHolder;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,22 +11,25 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
+
 
 public class FileProcessor implements Runnable {
 
+    private final List<String> filePathsLst;
     private final DataHolder dataHolder;
     private final StatisticsHolder statisticsHolder;
-    private final List<String> filePathsLst;
     private final AtomicBoolean isFinished;
+    Pattern integerPattern = Pattern.compile("^-?\\d+$");
 
     public FileProcessor(List<String> filePathsLst,
                          DataHolder dataHolder,
                          StatisticsHolder statisticsHolder,
                          AtomicBoolean isFinished) {
-        this.dataHolder = dataHolder;
         this.filePathsLst = filePathsLst;
-        this.isFinished = isFinished;
+        this.dataHolder = dataHolder;
         this.statisticsHolder = statisticsHolder;
+        this.isFinished = isFinished;
     }
 
     @Override
@@ -37,6 +41,7 @@ public class FileProcessor implements Runnable {
     public void fileProcessing() {
         BigInteger bigIntegerValue;
         Double doubleValue;
+        boolean creatable;
 
         List<BufferedReader> readersLst = new ArrayList<>();
         for (String oneFilePath : filePathsLst) {
@@ -56,22 +61,25 @@ public class FileProcessor implements Runnable {
                     continue;
                 }
                 if (line.isEmpty()) continue;
-                try {
+                creatable = NumberUtils.isCreatable(line);
+                if (isBigInteger(line, creatable)) {
                     bigIntegerValue = new BigInteger(line);
                     dataHolder.setOneBigInteger(bigIntegerValue);
                     statisticsHolder.increaseBigIntegerStatistics(bigIntegerValue);
-                } catch (NumberFormatException e) {
-                    try {
-                        doubleValue = Double.parseDouble(line);
-                        dataHolder.setOneDouble(doubleValue);
-                        statisticsHolder.increaseDoubleStatistics(doubleValue);
-                    } catch (NumberFormatException ex) {
-                        dataHolder.setOneString(line);
-                        statisticsHolder.increaseStringStatistics(line);
-                    }
+                } else if (creatable) {
+                    doubleValue = Double.parseDouble(line);
+                    dataHolder.setOneDouble(doubleValue);
+                    statisticsHolder.increaseDoubleStatistics(doubleValue);
+                } else {
+                    dataHolder.setOneString(line);
+                    statisticsHolder.increaseStringStatistics(line);
                 }
             }
         }
+    }
+
+    private boolean isBigInteger(String testString, boolean creatable) {
+        return creatable && integerPattern.matcher(testString).matches();
     }
 
     private String tryingReadLine(BufferedReader reader) {

@@ -135,6 +135,31 @@ class FileProcessorTest {
 
     }
 
+
+    @Test
+    public void filesContainsOnlyExponentTypeDoublesCausesOnlyExponentTypeDoublesResult() throws Exception {
+        Runnable fileProcessor = createDefaultFileProcessorObj();
+
+        try (FileWriter fileWriter = new FileWriter(filesLst.get(0))) {
+            fileWriter.write(7.463284523E-10 + "\n");
+            fileWriter.write(2.84523E-8 + "\n");
+            fileWriter.write(4.523E-12 + "\n");
+            fileWriter.write("5.23E-4");
+        }
+
+        runAndWaitThread(fileProcessor);
+
+        assertTrue(isFinished.get());
+        List<Double> resultList = dataHolder.getDoublesQueue().stream().toList();
+
+        assertEquals(List.of(7.463284523E-10, 2.84523E-8, 4.523E-12, 5.23E-4), resultList);
+        assertTrue(
+                dataHolder.getBigIntegersQueue().isEmpty() &&
+                        dataHolder.getStringsQueue().isEmpty()
+        );
+    }
+
+
     @Test
     public void filesContainsOnlyStringsCausesOnlyStringsResult() throws Exception {
         Runnable fileProcessor = createDefaultFileProcessorObj();
