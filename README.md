@@ -9,7 +9,8 @@
 ## Зависимости:
 * Java 21
 * Maven 3.9.2
-* Junit 5.12 https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+* Apache Commons Lang 3.17.0
+* Junit 5.12 
 
 ## Инструкция по запуску:
 1. Командой maven package собрать приложение
