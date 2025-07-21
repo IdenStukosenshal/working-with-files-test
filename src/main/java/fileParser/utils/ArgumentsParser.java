@@ -5,6 +5,8 @@ import fileParser.dto.SessionParametres;
 import fileParser.dto.StatisticsType;
 
 import java.nio.file.Path;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public class ArgumentsParser {
@@ -33,21 +35,23 @@ public class ArgumentsParser {
     }
 
     private int processPrefix(int i, String[] args, SessionParametres sessionParametres) {
-        if (i < args.length - 1) {
-            String prefix = args[i + 1];
-            if (validatePrefix(prefix)) sessionParametres.setPrefix(prefix);
-            else System.out.println("Префикс: " + prefix + " не корректен и не будет применён");
-        } else throw new IllegalArgumentException("Префикс не указан!");
-        return i + 1;
+        return processFlagWithArgument(
+                i,
+                args,
+                "Префикс: %s не корректен и не будет применён",
+                "Префикс не указан!",
+                this::validatePrefix,
+                sessionParametres::setPrefix);
     }
 
     private int processOutPath(int i, String[] args, SessionParametres sessionParametres) {
-        if (i < args.length - 1) {
-            String path = args[i + 1];
-            if (validatePath(path)) sessionParametres.setResultsPath(path);
-            else System.out.println("Путь файлов результата: " + path + "не корректен и не будет применён");
-        } else throw new IllegalArgumentException("Путь файлов результата не указан!");
-        return i + 1;
+        return processFlagWithArgument(
+                i,
+                args,
+                "Путь файлов результата: %s не корректен и не будет применён",
+                "Путь файлов результата не указан!",
+                this::validatePath,
+                sessionParametres::setResultsPath);
     }
 
     private void processFilePath(String currentArg, SessionParametres sessionParametres) {
@@ -55,6 +59,20 @@ public class ArgumentsParser {
             if (validatePath(currentArg)) sessionParametres.addToFilesPathsLst(currentArg);
             else System.out.println("Путь: " + currentArg + " не корректен и не будет добавлен");
         }
+    }
+
+    private int processFlagWithArgument(int i,
+                                        String[] args,
+                                        String errorIfNotCorrect,
+                                        String errorIfMissing,
+                                        Predicate<String> validator,
+                                        Consumer<String> setter) {
+        if (i < args.length - 1) {
+            String value = args[i + 1];
+            if (validator.test(value)) setter.accept(value);
+            else System.out.println(errorIfNotCorrect.formatted(value));
+        } else throw new IllegalArgumentException(errorIfMissing);
+        return i + 1;
     }
 
     private boolean validatePrefix(String prefix) {

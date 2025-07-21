@@ -15,7 +15,7 @@ public class SessionParametres {
                 filesPathsLst.toString() + "\n" +
                 "Со следующими параметрами: \n" +
                 "* путь файлов результата: " + resultsPath + "\n" +
-                "* префикс имён файлов: " + (!prefix.isEmpty() ? prefix : "нет" ) + "\n" +
+                "* префикс имён файлов: " + (!prefix.isEmpty() ? prefix : "нет") + "\n" +
                 "* добавить в конец файлов(вместо перезаписи): " + (append ? "да" : "нет") + "\n" +
                 "* тип статистики: " + statisticsType.getMsg();
     }

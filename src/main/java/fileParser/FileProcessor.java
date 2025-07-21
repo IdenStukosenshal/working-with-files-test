@@ -20,7 +20,7 @@ public class FileProcessor implements Runnable {
     private final DataHolder dataHolder;
     private final StatisticsHolder statisticsHolder;
     private final AtomicBoolean isFinished;
-    Pattern integerPattern = Pattern.compile("^-?\\d+$");
+    private final Pattern integerPattern = Pattern.compile("^-?\\d+$");
 
     public FileProcessor(List<String> filePathsLst,
                          DataHolder dataHolder,

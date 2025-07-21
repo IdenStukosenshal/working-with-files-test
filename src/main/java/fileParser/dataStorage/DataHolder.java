@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+//TODO Сделать Дженериком?
 public class DataHolder {
 
     private final Queue<String> stringsQ = new ConcurrentLinkedQueue<>();
@@ -14,7 +15,7 @@ public class DataHolder {
         return stringsQ.poll();
     }
 
-    public void setOneString(String line){
+    public void setOneString(String line) {
         stringsQ.offer(line);
     }
 
@@ -22,7 +23,7 @@ public class DataHolder {
         return bigIntegersQ.poll();
     }
 
-    public void setOneBigInteger(BigInteger oneInteger){
+    public void setOneBigInteger(BigInteger oneInteger) {
         bigIntegersQ.offer(oneInteger);
     }
 
@@ -30,7 +31,7 @@ public class DataHolder {
         return doublesQ.poll();
     }
 
-    public void setOneDouble(Double oneDouble){
+    public void setOneDouble(Double oneDouble) {
         doublesQ.offer(oneDouble);
     }
 

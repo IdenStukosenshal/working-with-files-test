@@ -23,7 +23,7 @@ public class Main {
         try {
             sessionParametres = argumentsParser.parse(args);
         } catch (RuntimeException exc) {
-            System.out.println("Пути файлов не были указаны");
+            System.out.println(exc.getMessage());
             return;
         }
         createDirectories(sessionParametres.getResultsPath());
@@ -71,7 +71,7 @@ public class Main {
 
         printStatistics(sessionParametres, statisticsHolder);
 
-        System.out.println("Работа выполнена успешно ");
+        System.out.println("Работа выполнена");
     }
 
 
