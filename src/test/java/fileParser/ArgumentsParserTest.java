@@ -46,7 +46,7 @@ class ArgumentsParserTest {
     }
 
     @Test
-    public void onlyFlagsWithoutFilePathsThrowsException(){
+    public void onlyFlagsWithoutFilePathsThrowsException() {
         String[] massive = new String[]{"-s", "-f", "-a", "-p", "prfx", "-o", "pth"};
 
         RuntimeException exception = assertThrows(RuntimeException.class,
@@ -86,6 +86,7 @@ class ArgumentsParserTest {
         );
     }
 
+
     @Test
     public void shortFlagGeneratesShortStatistics() {
         String[] massive = new String[]{"-s", "file"};
@@ -122,10 +123,11 @@ class ArgumentsParserTest {
     }
 
     @Test
-    public void prefixFlagWithoutValueSetsDefaultPrefixSettings() {
+    public void prefixFlagWithoutValueThrowsException() {
         String[] massive = new String[]{"file", "-p"};
-        sessionParametres = argumentsParser.parse(massive);
-        assertEquals("", sessionParametres.getPrefix());
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> argumentsParser.parse(massive)
+        );
     }
 
     @Test
@@ -143,10 +145,11 @@ class ArgumentsParserTest {
     }
 
     @Test
-    public void outputFlagWithoutValueSetsResultsPathDefaultSettings() {
+    public void outputFlagWithoutValueThrowsException() {
         String[] massive = new String[]{"file", "-o"};
-        sessionParametres = argumentsParser.parse(massive);
-        assertEquals(System.getProperty("user.dir"), sessionParametres.getResultsPath());
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> argumentsParser.parse(massive)
+        );
     }
 
     @Test
@@ -154,5 +157,36 @@ class ArgumentsParserTest {
         String[] massive = new String[]{"file", "-o", "result1", "-o", "result2"};
         sessionParametres = argumentsParser.parse(massive);
         assertEquals("result2", sessionParametres.getResultsPath());
+    }
+
+
+    @Test
+    public void invalidPrefixSetsDefaultPrefixSettings() {
+        String[] massive = new String[]{"file", "-p", "\\/ ?inc|o*rr>e<c:t"};
+        sessionParametres = argumentsParser.parse(massive);
+        assertEquals("", sessionParametres.getPrefix());
+    }
+
+    @Test
+    public void invalidFilePathsWillBeSkipped() {
+        String[] massive = new String[]{"file1", "path\"/*|?pa\\th"};
+        sessionParametres = argumentsParser.parse(massive);
+        assertEquals(List.of("file1"), sessionParametres.getFilesPathsLst());
+    }
+
+    @Test
+    public void invalidResultPathsSetsDefault() {
+        String[] massive = new String[]{"file1", "-o", "pat>h\"/*\\|?pa<th"};
+        sessionParametres = argumentsParser.parse(massive);
+        assertEquals(System.getProperty("user.dir"), sessionParametres.getResultsPath());
+    }
+
+    @Test
+    public void onlyInvalidFilePathsThrowsException() {
+        String[] massive = new String[]{" ", "?pa<t", "pat>h\"/*"};
+
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> argumentsParser.parse(massive)
+        );
     }
 }
