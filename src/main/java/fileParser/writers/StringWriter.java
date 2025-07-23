@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StringWriter implements Runnable {
-    private final DataHolder dataHolder;
+    private final DataHolder<String> dataHolder;
     private final SessionParametres sessionParametres;
     private final AtomicBoolean isFinished;
 
-    public StringWriter(DataHolder dataHolder,
+    public StringWriter(DataHolder<String> dataHolder,
                         SessionParametres sessionParametres,
                         AtomicBoolean isFinished) {
         this.dataHolder = dataHolder;
@@ -31,7 +31,7 @@ public class StringWriter implements Runnable {
         BufferedWriter bfwriter = null;
         try {
             while (true) {
-                String stringValue = dataHolder.getOneString();
+                String stringValue = dataHolder.getOneValue();
                 if (stringValue != null) {
                     if (bfwriter == null) {
                         bfwriter = new BufferedWriter(new FileWriter(fileString, sessionParametres.getAppend()));
@@ -39,7 +39,7 @@ public class StringWriter implements Runnable {
                     bfwriter.write(stringValue);
                     bfwriter.newLine();
                     bfwriter.flush();
-                } else if (isFinished.get() && dataHolder.getStringsQueue().isEmpty()) {
+                } else if (isFinished.get() && dataHolder.getQueue().isEmpty()) {
                     break;
                 }
             }

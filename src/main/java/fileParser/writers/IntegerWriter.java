@@ -12,11 +12,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class IntegerWriter implements Runnable {
 
-    private final DataHolder dataHolder;
+    private final DataHolder<BigInteger> dataHolder;
     private final SessionParametres sessionParametres;
     private final AtomicBoolean isFinished;
 
-    public IntegerWriter(DataHolder dataHolder,
+    public IntegerWriter(DataHolder<BigInteger> dataHolder,
                          SessionParametres sessionParametres,
                          AtomicBoolean isFinished) {
         this.dataHolder = dataHolder;
@@ -25,14 +25,14 @@ public class IntegerWriter implements Runnable {
     }
 
     @Override
-    public void run(){
+    public void run() {
         String outputPath = sessionParametres.getResultsPath() +
                 File.separator + sessionParametres.getPrefix() + "integers.txt";
         File fileInteger = new File(outputPath);
         BufferedWriter bfwriter = null;
         try {
             while (true) {
-                BigInteger bigIntegerValue = dataHolder.getOneBigInteger();
+                BigInteger bigIntegerValue = dataHolder.getOneValue();
                 if (bigIntegerValue != null) {
                     if (bfwriter == null) {
                         bfwriter = new BufferedWriter(new FileWriter(fileInteger, sessionParametres.getAppend()));
@@ -40,7 +40,7 @@ public class IntegerWriter implements Runnable {
                     bfwriter.write(bigIntegerValue.toString());
                     bfwriter.newLine();
                     bfwriter.flush();
-                } else if (isFinished.get() && dataHolder.getBigIntegersQueue().isEmpty()) {
+                } else if (isFinished.get() && dataHolder.getQueue().isEmpty()) {
                     break;
                 }
             }

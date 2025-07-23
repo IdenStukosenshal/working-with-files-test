@@ -2,13 +2,15 @@ package fileParser;
 
 import fileParser.dataStorage.DataHolder;
 import fileParser.dataStorage.StatisticsHolder;
-import fileParser.dto.*;
+import fileParser.dto.SessionParametres;
+import fileParser.dto.StatisticsType;
 import fileParser.utils.ArgumentsParser;
 import fileParser.writers.DoubleWriter;
 import fileParser.writers.IntegerWriter;
 import fileParser.writers.StringWriter;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
@@ -16,7 +18,11 @@ public class Main {
     public static void main(String[] args) {
 
         ArgumentsParser argumentsParser = new ArgumentsParser();
-        DataHolder dataHolder = new DataHolder();
+
+        DataHolder<BigInteger> bigIntegerDataHolder = new DataHolder<>();
+        DataHolder<Double> doubleDataHolder = new DataHolder<>();
+        DataHolder<String> stringDataHolder = new DataHolder<>();
+
         AtomicBoolean isFinished = new AtomicBoolean(false);
         SessionParametres sessionParametres;
 
@@ -33,20 +39,22 @@ public class Main {
 
         Runnable fileProcessor = new FileProcessor(
                 sessionParametres.getFilesPathsLst(),
-                dataHolder,
+                bigIntegerDataHolder,
+                doubleDataHolder,
+                stringDataHolder,
                 statisticsHolder,
                 isFinished);
 
         Runnable integerWriterRunnable = new IntegerWriter(
-                dataHolder,
+                bigIntegerDataHolder,
                 sessionParametres,
                 isFinished);
-        Runnable  doubleWriterRunnable = new DoubleWriter(
-                dataHolder,
+        Runnable doubleWriterRunnable = new DoubleWriter(
+                doubleDataHolder,
                 sessionParametres,
                 isFinished);
-        Runnable  stringWriterRunnable = new StringWriter(
-                dataHolder,
+        Runnable stringWriterRunnable = new StringWriter(
+                stringDataHolder,
                 sessionParametres,
                 isFinished);
 
@@ -75,12 +83,13 @@ public class Main {
     }
 
 
-    private static void createDirectories(String path){
+    private static void createDirectories(String path) {
         File structure = new File(path);
         structure.mkdirs();
     }
-    private static void printStatistics(SessionParametres sessionParametres, StatisticsHolder statisticsHolder){
-        if(sessionParametres.getStatisticsType() != StatisticsType.NONE){
+
+    private static void printStatistics(SessionParametres sessionParametres, StatisticsHolder statisticsHolder) {
+        if (sessionParametres.getStatisticsType() != StatisticsType.NONE) {
             System.out.println(statisticsHolder.getIntegerStatistics() +
                     statisticsHolder.getDoubleStatistics() +
                     statisticsHolder.getStringStatistics());

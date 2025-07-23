@@ -17,17 +17,23 @@ import java.util.regex.Pattern;
 public class FileProcessor implements Runnable {
 
     private final List<String> filePathsLst;
-    private final DataHolder dataHolder;
+    private final DataHolder<BigInteger> bigIntegerDataHolder;
+    private final DataHolder<Double> doubleDataHolder;
+    private final DataHolder<String> stringDataHolder;
     private final StatisticsHolder statisticsHolder;
     private final AtomicBoolean isFinished;
     private final Pattern integerPattern = Pattern.compile("^-?\\d+$");
 
     public FileProcessor(List<String> filePathsLst,
-                         DataHolder dataHolder,
+                         DataHolder<BigInteger> bigIntegerDataHolder,
+                         DataHolder<Double> doubleDataHolder,
+                         DataHolder<String> stringDataHolder,
                          StatisticsHolder statisticsHolder,
                          AtomicBoolean isFinished) {
         this.filePathsLst = filePathsLst;
-        this.dataHolder = dataHolder;
+        this.bigIntegerDataHolder = bigIntegerDataHolder;
+        this.doubleDataHolder = doubleDataHolder;
+        this.stringDataHolder = stringDataHolder;
         this.statisticsHolder = statisticsHolder;
         this.isFinished = isFinished;
     }
@@ -64,14 +70,14 @@ public class FileProcessor implements Runnable {
                 creatable = NumberUtils.isCreatable(line);
                 if (isBigInteger(line, creatable)) {
                     bigIntegerValue = new BigInteger(line);
-                    dataHolder.setOneBigInteger(bigIntegerValue);
+                    bigIntegerDataHolder.setOneValue(bigIntegerValue);
                     statisticsHolder.increaseBigIntegerStatistics(bigIntegerValue);
                 } else if (creatable) {
                     doubleValue = Double.parseDouble(line);
-                    dataHolder.setOneDouble(doubleValue);
+                    doubleDataHolder.setOneValue(doubleValue);
                     statisticsHolder.increaseDoubleStatistics(doubleValue);
                 } else {
-                    dataHolder.setOneString(line);
+                    stringDataHolder.setOneValue(line);
                     statisticsHolder.increaseStringStatistics(line);
                 }
             }

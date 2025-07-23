@@ -32,14 +32,12 @@ public class StatisticsHolder {
 
     public void increaseBigIntegerStatistics(BigInteger currentIntValue) {
         switch (statisticsType) {
-            case NONE -> {
-            }
             case SHORT -> countBigIntegerNumbers++;
             case FULL -> {
-                if(bigIntegerMinNumber == null || currentIntValue.compareTo(bigIntegerMinNumber) < 0){
+                if (bigIntegerMinNumber == null || currentIntValue.compareTo(bigIntegerMinNumber) < 0) {
                     bigIntegerMinNumber = currentIntValue;
                 }
-                if(bigIntegerMaxNumber == null || currentIntValue.compareTo(bigIntegerMaxNumber)>0){
+                if (bigIntegerMaxNumber == null || currentIntValue.compareTo(bigIntegerMaxNumber) > 0) {
                     bigIntegerMaxNumber = currentIntValue;
                 }
                 countBigIntegerNumbers++;
@@ -53,7 +51,7 @@ public class StatisticsHolder {
             switch (statisticsType) {
                 case SHORT -> {
                     return "Integer Statistics: \n" +
-                            "количество чисел: " + countBigIntegerNumbers +"\n";
+                            "количество чисел: " + countBigIntegerNumbers + "\n";
                 }
                 case FULL -> {
                     return "Integer Statistics: \n" +
@@ -61,7 +59,7 @@ public class StatisticsHolder {
                             ", минимальное значение: " + bigIntegerMinNumber +
                             ", максимальное значение: " + bigIntegerMaxNumber +
                             ", сумма всех значений: " + bigIntegerSumNumbers.toString() +
-                            ", среднее значение: " + calculateMidInteger() +"\n";
+                            ", среднее значение: " + calculateMidInteger() + "\n";
                 }
             }
         }
@@ -70,8 +68,6 @@ public class StatisticsHolder {
 
     public void increaseDoubleStatistics(Double currentValue) {
         switch (statisticsType) {
-            case NONE -> {
-            }
             case SHORT -> countDoubleNumbers++;
             case FULL -> {
                 countDoubleNumbers++;
@@ -87,7 +83,7 @@ public class StatisticsHolder {
             switch (statisticsType) {
                 case SHORT -> {
                     return "Float Statistics: \n" +
-                            "количество чисел: " + countDoubleNumbers +"\n";
+                            "количество чисел: " + countDoubleNumbers + "\n";
                 }
                 case FULL -> {
                     return "Float Statistics: \n" +
@@ -95,7 +91,7 @@ public class StatisticsHolder {
                             ", минимальное значение: " + doubleMinNumber +
                             ", максимальное значение: " + doubleMaxNumber +
                             ", сумма всех значений: " + doubleSumNumbers +
-                            ", среднее значение: " + calculateMidDouble() +"\n";
+                            ", среднее значение: " + calculateMidDouble() + "\n";
                 }
             }
         }
@@ -104,8 +100,6 @@ public class StatisticsHolder {
 
     public void increaseStringStatistics(String currentString) {
         switch (statisticsType) {
-            case NONE -> {
-            }
             case SHORT -> stringCount++;
             case FULL -> {
                 stringCount++;
@@ -120,13 +114,13 @@ public class StatisticsHolder {
             switch (statisticsType) {
                 case SHORT -> {
                     return "String Statistics :\n" +
-                            "количество строк: " + stringCount +"\n";
+                            "количество строк: " + stringCount + "\n";
                 }
                 case FULL -> {
                     return "String Statistics :\n" +
                             "количество строк: " + stringCount +
                             ", минимальная длина строки: " + stringMinLength + " символов" +
-                            ", максимальная длина строки: " + stringMaxLength + " символов" +"\n";
+                            ", максимальная длина строки: " + stringMaxLength + " символов" + "\n";
                 }
             }
         }
