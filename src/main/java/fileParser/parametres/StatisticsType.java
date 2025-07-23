@@ -1,4 +1,4 @@
-package fileParser.dto;
+package fileParser.parametres;
 
 public enum StatisticsType {
 

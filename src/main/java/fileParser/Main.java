@@ -2,21 +2,21 @@ package fileParser;
 
 import fileParser.dataStorage.DataHolder;
 import fileParser.dataStorage.StatisticsHolder;
-import fileParser.dto.SessionParametres;
-import fileParser.dto.StatisticsType;
+import fileParser.parametres.SessionParametres;
+import fileParser.parametres.StatisticsType;
+import fileParser.reader.FileProcessor;
 import fileParser.utils.ArgumentsParser;
-import fileParser.writers.DoubleWriter;
-import fileParser.writers.IntegerWriter;
-import fileParser.writers.StringWriter;
+import fileParser.writer.ValueWriter;
+import static fileParser.parametres.OutFileNames.*;
 
 import java.io.File;
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
 public class Main {
 
     public static void main(String[] args) {
-
         ArgumentsParser argumentsParser = new ArgumentsParser();
 
         DataHolder<BigInteger> bigIntegerDataHolder = new DataHolder<>();
@@ -45,18 +45,21 @@ public class Main {
                 statisticsHolder,
                 isFinished);
 
-        Runnable integerWriterRunnable = new IntegerWriter(
+        Runnable integerWriterRunnable = new ValueWriter<>(
                 bigIntegerDataHolder,
                 sessionParametres,
-                isFinished);
-        Runnable doubleWriterRunnable = new DoubleWriter(
+                isFinished,
+                INTEGERS.getFileName());
+        Runnable doubleWriterRunnable = new ValueWriter<>(
                 doubleDataHolder,
                 sessionParametres,
-                isFinished);
-        Runnable stringWriterRunnable = new StringWriter(
+                isFinished,
+                DOUBLES.getFileName());
+        Runnable stringWriterRunnable = new ValueWriter<>(
                 stringDataHolder,
                 sessionParametres,
-                isFinished);
+                isFinished,
+                STRINGS.getFileName());
 
         Thread readThread = new Thread(fileProcessor);
         Thread writeIntegerThread = new Thread(integerWriterRunnable);

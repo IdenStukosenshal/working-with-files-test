@@ -1,8 +1,8 @@
 package fileParser.utils;
 
-import fileParser.dto.OptionsFlag;
-import fileParser.dto.SessionParametres;
-import fileParser.dto.StatisticsType;
+import fileParser.parametres.OptionsFlag;
+import fileParser.parametres.SessionParametres;
+import fileParser.parametres.StatisticsType;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;

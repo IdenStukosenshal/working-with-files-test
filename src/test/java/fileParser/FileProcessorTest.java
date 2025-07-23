@@ -2,7 +2,8 @@ package fileParser;
 
 import fileParser.dataStorage.DataHolder;
 import fileParser.dataStorage.StatisticsHolder;
-import fileParser.dto.SessionParametres;
+import fileParser.parametres.SessionParametres;
+import fileParser.reader.FileProcessor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

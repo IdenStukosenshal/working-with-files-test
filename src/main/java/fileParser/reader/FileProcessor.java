@@ -1,4 +1,4 @@
-package fileParser;
+package fileParser.reader;
 
 import fileParser.dataStorage.DataHolder;
 import fileParser.dataStorage.StatisticsHolder;

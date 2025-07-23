@@ -1,7 +1,7 @@
-package fileParser.writers;
+package fileParser.writer;
 
 import fileParser.dataStorage.DataHolder;
-import fileParser.dto.SessionParametres;
+import fileParser.parametres.SessionParametres;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,33 +9,37 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DoubleWriter implements Runnable {
-    private final DataHolder<Double> dataHolder;
+public class ValueWriter<T> implements Runnable {
+
+    private final DataHolder<T> dataHolder;
     private final SessionParametres sessionParametres;
     private final AtomicBoolean isFinished;
+    private final String fileName;
 
-    public DoubleWriter(DataHolder<Double> dataHolder,
-                        SessionParametres sessionParametres,
-                        AtomicBoolean isFinished) {
+    public ValueWriter(DataHolder<T> dataHolder,
+                       SessionParametres sessionParametres,
+                       AtomicBoolean isFinished,
+                       String fileName) {
         this.dataHolder = dataHolder;
         this.sessionParametres = sessionParametres;
         this.isFinished = isFinished;
+        this.fileName = fileName;
     }
 
     @Override
     public void run() {
         String outputPath = sessionParametres.getResultsPath() +
-                File.separator + sessionParametres.getPrefix() + "floats.txt";
-        File fileDouble = new File(outputPath);
+                File.separator + sessionParametres.getPrefix() + fileName;
+        File fileInteger = new File(outputPath);
         BufferedWriter bfwriter = null;
         try {
             while (true) {
-                Double doubleValue = dataHolder.getOneValue();
-                if (doubleValue != null) {
+                var value = dataHolder.getOneValue();
+                if (value != null) {
                     if (bfwriter == null) {
-                        bfwriter = new BufferedWriter(new FileWriter(fileDouble, sessionParametres.getAppend()));
+                        bfwriter = new BufferedWriter(new FileWriter(fileInteger, sessionParametres.getAppend()));
                     }
-                    bfwriter.write(String.valueOf(doubleValue));
+                    bfwriter.write(value.toString());
                     bfwriter.newLine();
                     bfwriter.flush();
                 } else if (isFinished.get() && dataHolder.getQueue().isEmpty()) {
@@ -43,7 +47,7 @@ public class DoubleWriter implements Runnable {
                 }
             }
         } catch (IOException ee) {
-            System.out.println("Не удалось создать/открыть файл: " + sessionParametres.getPrefix() + "floats.txt");
+            System.out.println("Не удалось создать/открыть файл: " + sessionParametres.getPrefix() + fileName);
         } finally {
             if (bfwriter != null) {
                 try {

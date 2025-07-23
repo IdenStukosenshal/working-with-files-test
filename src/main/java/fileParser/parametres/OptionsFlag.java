@@ -1,4 +1,4 @@
-package fileParser.dto;
+package fileParser.parametres;
 
 public enum OptionsFlag {
     SHORT_STAT("-s"),

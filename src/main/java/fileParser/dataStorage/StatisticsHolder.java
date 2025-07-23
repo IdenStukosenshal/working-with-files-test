@@ -1,7 +1,7 @@
 package fileParser.dataStorage;
 
-import fileParser.dto.SessionParametres;
-import fileParser.dto.StatisticsType;
+import fileParser.parametres.SessionParametres;
+import fileParser.parametres.StatisticsType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

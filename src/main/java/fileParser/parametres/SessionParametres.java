@@ -1,4 +1,4 @@
-package fileParser.dto;
+package fileParser.parametres;
 
 import java.util.ArrayList;
 import java.util.List;
