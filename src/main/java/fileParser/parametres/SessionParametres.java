@@ -56,10 +56,6 @@ public class SessionParametres {
         this.append = append;
     }
 
-    public void setFilesPathsLst(List<String> filesPathsLst) {
-        this.filesPathsLst = filesPathsLst;
-    }
-
     public void addToFilesPathsLst(String filesPaths) {
         this.filesPathsLst.add(filesPaths);
     }
