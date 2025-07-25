@@ -8,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
@@ -45,63 +44,36 @@ public class FileProcessor implements Runnable {
     }
 
     public void fileProcessing() {
+        String line;
         BigInteger bigIntegerValue;
         Double doubleValue;
         boolean creatable;
 
-        List<BufferedReader> readersLst = new ArrayList<>();
         for (String oneFilePath : filePathsLst) {
-            try {
-                readersLst.add(new BufferedReader(new FileReader(oneFilePath)));
+            try (BufferedReader reader = new BufferedReader(new FileReader(oneFilePath))) {
+                while ((line = reader.readLine()) != null) {
+                    if (line.isEmpty()) continue;
+                    creatable = NumberUtils.isCreatable(line);
+                    if (isBigInteger(line, creatable)) {
+                        bigIntegerValue = new BigInteger(line);
+                        bigIntegerDataHolder.setOneValue(bigIntegerValue);
+                        statisticsHolder.increaseBigIntegerStatistics(bigIntegerValue);
+                    } else if (creatable) {
+                        doubleValue = Double.parseDouble(line);
+                        doubleDataHolder.setOneValue(doubleValue);
+                        statisticsHolder.increaseDoubleStatistics(doubleValue);
+                    } else {
+                        stringDataHolder.setOneValue(line);
+                        statisticsHolder.increaseStringStatistics(line);
+                    }
+                }
             } catch (IOException ee) {
-                System.out.println("Чтение файла: (" + oneFilePath + ") не удалось. Данные из этого файла не будут прочитаны");
-            }
-        }
-        while (!readersLst.isEmpty()) {
-            for (int i = 0; i < readersLst.size(); i++) {
-                var reader = readersLst.get(i);
-                String line = tryingReadLine(reader);
-                if (line == null) {
-                    closeReader(reader);
-                    readersLst.remove(reader);
-                    continue;
-                }
-                if (line.isEmpty()) continue;
-                creatable = NumberUtils.isCreatable(line);
-                if (isBigInteger(line, creatable)) {
-                    bigIntegerValue = new BigInteger(line);
-                    bigIntegerDataHolder.setOneValue(bigIntegerValue);
-                    statisticsHolder.increaseBigIntegerStatistics(bigIntegerValue);
-                } else if (creatable) {
-                    doubleValue = Double.parseDouble(line);
-                    doubleDataHolder.setOneValue(doubleValue);
-                    statisticsHolder.increaseDoubleStatistics(doubleValue);
-                } else {
-                    stringDataHolder.setOneValue(line);
-                    statisticsHolder.increaseStringStatistics(line);
-                }
+                System.out.println("Во время чтения файла: " + oneFilePath + " произошла ошибка. Данные из этого файла не будут читаться далее");
             }
         }
     }
 
     private boolean isBigInteger(String testString, boolean creatable) {
         return creatable && integerPattern.matcher(testString).matches();
-    }
-
-    private String tryingReadLine(BufferedReader reader) {
-        try {
-            return reader.readLine();
-        } catch (IOException ee) {
-            System.out.println("Ошибка во время чтения одного из файлов, данные из него не будут читаться далее");
-        }
-        return null;
-    }
-
-    private void closeReader(BufferedReader reader) {
-        try {
-            reader.close();
-        } catch (IOException ee) {
-            System.out.println("Ошибка при закрытии потока чтения одного из файлов, данные могут быть прочитаны не полностью");
-        }
     }
 }

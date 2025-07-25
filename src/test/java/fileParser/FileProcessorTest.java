@@ -85,7 +85,7 @@ class FileProcessorTest {
 
         assertTrue(isFinished.get());
         List<BigInteger> resultList = bigIntegerDataHolder.getQueue().stream().toList();
-        List<BigInteger> expectedLst = List.of(BigInteger.valueOf(8), BigInteger.valueOf(16), BigInteger.valueOf(21), BigInteger.valueOf(42));
+        List<BigInteger> expectedLst = List.of(BigInteger.valueOf(8), BigInteger.valueOf(21), BigInteger.valueOf(16), BigInteger.valueOf(42));
         assertEquals(expectedLst, resultList);
         assertTrue(
                 doubleDataHolder.getQueue().isEmpty() &&
@@ -131,7 +131,7 @@ class FileProcessorTest {
 
         assertTrue(isFinished.get());
         List<Double> resultList = doubleDataHolder.getQueue().stream().toList();
-        assertEquals(List.of(1.2, 2.4, 1.3, 2.6), resultList);
+        assertEquals(List.of(1.2, 1.3, 2.4, 2.6), resultList);
         assertTrue(
                 bigIntegerDataHolder.getQueue().isEmpty() &&
                         stringDataHolder.getQueue().isEmpty()
@@ -177,7 +177,7 @@ class FileProcessorTest {
 
         assertTrue(isFinished.get());
         List<String> resultList = stringDataHolder.getQueue().stream().toList();
-        assertEquals(List.of("row 2", "row 4", "row 3", "row 6"), resultList);
+        assertEquals(List.of("row 2", "row 3", "row 4", "row 6"), resultList);
         assertTrue(
                 bigIntegerDataHolder.getQueue().isEmpty() &&
                         doubleDataHolder.getQueue().isEmpty()
