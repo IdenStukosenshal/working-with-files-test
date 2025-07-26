@@ -4,13 +4,14 @@ import fileParser.parametres.OptionsFlag;
 import fileParser.parametres.SessionParametres;
 import fileParser.parametres.StatisticsType;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public class ArgumentsParser {
-    private final Pattern forbiddenPrefixPattern = Pattern.compile(".*[<>:\"|?*/\\\\]+.*");
+    private final Pattern forbiddenWinNamePattern = Pattern.compile(".*[<>:\"|?*/\\\\]+.*");
 
     public SessionParametres parse(String[] args) throws RuntimeException {
         SessionParametres sessionParametres = new SessionParametres();
@@ -40,7 +41,7 @@ public class ArgumentsParser {
                 args,
                 "Префикс: %s не корректен и не будет применён",
                 "Префикс не указан!",
-                this::validatePrefix,
+                this::isValidName,
                 sessionParametres::setPrefix);
     }
 
@@ -50,15 +51,8 @@ public class ArgumentsParser {
                 args,
                 "Путь файлов результата: %s не корректен и не будет применён",
                 "Путь файлов результата не указан!",
-                this::validatePath,
+                this::isValidOutPath,
                 sessionParametres::setResultsPath);
-    }
-
-    private void processFilePath(String currentArg, SessionParametres sessionParametres) {
-        if (!currentArg.isBlank()) {
-            if (validatePath(currentArg)) sessionParametres.addToFilesPathsLst(currentArg);
-            else System.out.println("Путь: " + currentArg + " не корректен и не будет добавлен");
-        }
     }
 
     private int processFlagWithArgument(int i,
@@ -75,14 +69,29 @@ public class ArgumentsParser {
         return i + 1;
     }
 
-    private boolean validatePrefix(String prefix) {
-        return !forbiddenPrefixPattern.matcher(prefix).matches();
+    private void processFilePath(String currentArg, SessionParametres sessionParametres) {
+        if (!currentArg.isBlank()) {
+            if (isFileExists(currentArg)) sessionParametres.addToFilesPathsLst(currentArg);
+            else System.out.println("Файл: " + currentArg + " не найден и не будет добавлен");
+        }
     }
 
-    private boolean validatePath(String pathString) {
+    private boolean isValidName(String prefix) {
+        return !forbiddenWinNamePattern.matcher(prefix).matches();
+    }
+
+    private boolean isValidOutPath(String pathString) {
         try {
             Path.of(pathString.trim());
             return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean isFileExists(String pathString) {
+        try {
+            return Files.exists(Path.of(pathString.trim()));
         } catch (Exception e) {
             return false;
         }

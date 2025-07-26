@@ -30,18 +30,17 @@ public class ValueWriter<T> implements Runnable {
     public void run() {
         String outputPath = sessionParametres.getResultsPath() +
                 File.separator + sessionParametres.getPrefix() + fileName;
-        File fileInteger = new File(outputPath);
+        File file = new File(outputPath);
         BufferedWriter bfwriter = null;
         try {
             while (true) {
                 var value = dataHolder.getOneValue();
                 if (value != null) {
                     if (bfwriter == null) {
-                        bfwriter = new BufferedWriter(new FileWriter(fileInteger, sessionParametres.getAppend()));
+                        bfwriter = new BufferedWriter(new FileWriter(file, sessionParametres.getAppend()));
                     }
                     bfwriter.write(value.toString());
                     bfwriter.newLine();
-                    bfwriter.flush();
                 } else if (isFinished.get() && dataHolder.getQueue().isEmpty()) {
                     break;
                 }

@@ -11,8 +11,8 @@ public class DataHolder<T> {
         return queue.poll();
     }
 
-    public void setOneValue(T oneInteger) {
-        queue.offer(oneInteger);
+    public void setOneValue(T oneValue) {
+        queue.offer(oneValue);
     }
 
     public Queue<T> getQueue() {
