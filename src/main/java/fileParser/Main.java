@@ -2,21 +2,32 @@ package fileParser;
 
 import fileParser.dataStorage.DataHolder;
 import fileParser.dataStorage.StatisticsHolder;
-import fileParser.parametres.SessionParametres;
-import fileParser.parametres.StatisticsType;
+import fileParser.parameters.SessionParametres;
+import fileParser.parameters.StatisticsType;
 import fileParser.reader.FileProcessor;
 import fileParser.utils.ArgumentsParser;
 import fileParser.writer.ValueWriter;
-import static fileParser.parametres.OutFileNames.*;
 
 import java.io.File;
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static fileParser.parameters.ErrorMessages.*;
+import static fileParser.parameters.OutFileNames.*;
+
 
 public class Main {
 
     public static void main(String[] args) {
+        try {
+            runApp(args);
+        } catch (Exception e) {
+            System.out.println(INTERNAL_ERROR.getMessage());
+        }
+    }
+
+
+    private static void runApp(String[] args) throws Exception {
         ArgumentsParser argumentsParser = new ArgumentsParser();
 
         DataHolder<BigInteger> bigIntegerDataHolder = new DataHolder<>();
@@ -32,7 +43,12 @@ public class Main {
             System.out.println(exc.getMessage());
             return;
         }
-        createDirectories(sessionParametres.getResultsPath());
+        try {
+            createDirectories(sessionParametres.getResultsPath());
+        } catch (SecurityException ee) {
+            System.out.println(CREATING_DIR_ERROR.getMessage());
+            return;
+        }
         StatisticsHolder statisticsHolder = new StatisticsHolder(sessionParametres);
 
         System.out.println(sessionParametres.getMessage());
@@ -76,15 +92,15 @@ public class Main {
             writeIntegerThread.join();
             writeDoubleThread.join();
             writeStringThread.join();
-        } catch (InterruptedException eee) {
-            System.out.println("Прерывание работы программы по неизвестным причинам");
+        } catch (InterruptedException e) {
+            System.out.println(INTERRUPT_ERROR.getMessage() + e.getMessage());
+            return;
         }
 
         printStatistics(sessionParametres, statisticsHolder);
 
         System.out.println("Работа выполнена");
     }
-
 
     private static void createDirectories(String path) {
         File structure = new File(path);

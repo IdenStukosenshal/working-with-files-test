@@ -1,4 +1,4 @@
-package fileParser.parametres;
+package fileParser.parameters;
 
 import java.util.ArrayList;
 import java.util.List;

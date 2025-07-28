@@ -6,11 +6,12 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+
+import static fileParser.parameters.ErrorMessages.*;
 
 
 public class FileProcessor implements Runnable {
@@ -67,8 +68,8 @@ public class FileProcessor implements Runnable {
                         statisticsHolder.increaseStringStatistics(line);
                     }
                 }
-            } catch (IOException ee) {
-                System.out.println("Во время чтения файла: " + oneFilePath + " произошла ошибка. Данные из этого файла не будут читаться далее");
+            } catch (Exception ee) {
+                System.out.println(READING_ERROR.getMessage().formatted(oneFilePath));
             }
         }
     }

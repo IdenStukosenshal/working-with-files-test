@@ -1,13 +1,16 @@
 package fileParser.writer;
 
 import fileParser.dataStorage.DataHolder;
-import fileParser.parametres.SessionParametres;
+import fileParser.parameters.SessionParametres;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static fileParser.parameters.ErrorMessages.*;
+
 
 public class ValueWriter<T> implements Runnable {
 
@@ -46,13 +49,13 @@ public class ValueWriter<T> implements Runnable {
                 }
             }
         } catch (IOException ee) {
-            System.out.println("Не удалось создать/открыть файл: " + sessionParametres.getPrefix() + fileName);
+            System.out.println(WRITING_FILE_ERROR.getMessage() + sessionParametres.getPrefix() + fileName);
         } finally {
             if (bfwriter != null) {
                 try {
                     bfwriter.close();
                 } catch (IOException ee) {
-                    System.out.println("Ошибка при попытке закрыть поток записи, часть информации может быть утеряна");
+                    System.out.println(CLOSING_ERROR.getMessage());
                 }
             }
         }

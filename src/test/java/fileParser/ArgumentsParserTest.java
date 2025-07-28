@@ -1,7 +1,7 @@
 package fileParser;
 
-import fileParser.parametres.SessionParametres;
-import fileParser.parametres.StatisticsType;
+import fileParser.parameters.SessionParametres;
+import fileParser.parameters.StatisticsType;
 import fileParser.utils.ArgumentsParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

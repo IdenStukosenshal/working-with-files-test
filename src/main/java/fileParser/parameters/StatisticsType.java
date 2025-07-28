@@ -1,4 +1,4 @@
-package fileParser.parametres;
+package fileParser.parameters;
 
 public enum StatisticsType {
 

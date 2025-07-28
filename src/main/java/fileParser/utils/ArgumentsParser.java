@@ -1,14 +1,16 @@
 package fileParser.utils;
 
-import fileParser.parametres.OptionsFlag;
-import fileParser.parametres.SessionParametres;
-import fileParser.parametres.StatisticsType;
+import fileParser.parameters.OptionsFlag;
+import fileParser.parameters.SessionParametres;
+import fileParser.parameters.StatisticsType;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+
+import static fileParser.parameters.ErrorMessages.*;
 
 public class ArgumentsParser {
     private final Pattern forbiddenWinNamePattern = Pattern.compile(".*[<>:\"|?*/\\\\]+.*");
@@ -31,7 +33,7 @@ public class ArgumentsParser {
             }
         }
         if (sessionParametres.getFilesPathsLst().isEmpty())
-            throw new RuntimeException("Корректные пути файлов не были указаны");
+            throw new IllegalArgumentException(INVALID_FILE_PATHS.getMessage());
         return sessionParametres;
     }
 
@@ -39,8 +41,8 @@ public class ArgumentsParser {
         return processFlagWithArgument(
                 i,
                 args,
-                "Префикс: %s не корректен и не будет применён",
-                "Префикс не указан!",
+                INVALID_PREFIX.getMessage(),
+                PREFIX_MISSED.getMessage(),
                 this::isValidName,
                 sessionParametres::setPrefix);
     }
@@ -49,8 +51,8 @@ public class ArgumentsParser {
         return processFlagWithArgument(
                 i,
                 args,
-                "Путь файлов результата: %s не корректен и не будет применён",
-                "Путь файлов результата не указан!",
+                INVALID_OUT_PATH.getMessage(),
+                OUT_PATH_MISSED.getMessage(),
                 this::isValidOutPath,
                 sessionParametres::setResultsPath);
     }
@@ -72,7 +74,7 @@ public class ArgumentsParser {
     private void processFilePath(String currentArg, SessionParametres sessionParametres) {
         if (!currentArg.isBlank()) {
             if (isFileExists(currentArg)) sessionParametres.addToFilesPathsLst(currentArg);
-            else System.out.println("Файл: " + currentArg + " не найден и не будет добавлен");
+            else System.out.println(FILE_NOT_FOUND.getMessage().formatted(currentArg));
         }
     }
 
