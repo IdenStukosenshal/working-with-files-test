@@ -13,10 +13,6 @@ public enum OptionsFlag {
         this.flag = flag;
     }
 
-    public String getFlag() {
-        return flag;
-    }
-
     public static OptionsFlag fromString(String strk) {
         for (var e : OptionsFlag.values()) {
             if (e.flag.equals(strk)) return e;

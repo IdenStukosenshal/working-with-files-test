@@ -9,7 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static fileParser.parameters.ErrorMessages.*;
+import static fileParser.parameters.ErrorMessages.CLOSING_ERROR;
+import static fileParser.parameters.ErrorMessages.WRITING_FILE_ERROR;
 
 
 public class ValueWriter<T> implements Runnable {

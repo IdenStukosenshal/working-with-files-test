@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
-import static fileParser.parameters.ErrorMessages.*;
+import static fileParser.parameters.ErrorMessages.READING_ERROR;
 
 
 public class FileProcessor implements Runnable {

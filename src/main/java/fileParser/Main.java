@@ -27,7 +27,7 @@ public class Main {
     }
 
 
-    private static void runApp(String[] args) throws Exception {
+    private static void runApp(String[] args) {
         ArgumentsParser argumentsParser = new ArgumentsParser();
 
         DataHolder<BigInteger> bigIntegerDataHolder = new DataHolder<>();
@@ -49,7 +49,7 @@ public class Main {
             System.out.println(CREATING_DIR_ERROR.getMessage());
             return;
         }
-        StatisticsHolder statisticsHolder = new StatisticsHolder(sessionParametres);
+        StatisticsHolder statisticsHolder = new StatisticsHolder(sessionParametres.getStatisticsType());
 
         System.out.println(sessionParametres.getMessage());
 

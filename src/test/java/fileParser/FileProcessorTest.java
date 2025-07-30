@@ -26,7 +26,7 @@ class FileProcessorTest {
     private final DataHolder<String> stringDataHolder = new DataHolder<>();
 
     private final SessionParametres sessionParametres = new SessionParametres();
-    private final StatisticsHolder statisticsHolder = new StatisticsHolder(sessionParametres);
+    private final StatisticsHolder statisticsHolder = new StatisticsHolder(sessionParametres.getStatisticsType());
     private AtomicBoolean isFinished = new AtomicBoolean(false);
     private final List<File> filesLst = new ArrayList<>();
 

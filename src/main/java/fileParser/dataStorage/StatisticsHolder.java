@@ -1,6 +1,5 @@
 package fileParser.dataStorage;
 
-import fileParser.parameters.SessionParametres;
 import fileParser.parameters.StatisticsType;
 
 import java.math.BigDecimal;
@@ -26,8 +25,8 @@ public class StatisticsHolder {
     private Integer stringMinLength = Integer.MAX_VALUE;
     private Integer stringMaxLength = 0;
 
-    public StatisticsHolder(SessionParametres sessionParametres) {
-        this.statisticsType = sessionParametres.getStatisticsType();
+    public StatisticsHolder(StatisticsType statisticsType) {
+        this.statisticsType = statisticsType;
     }
 
     public void increaseBigIntegerStatistics(BigInteger currentIntValue) {
